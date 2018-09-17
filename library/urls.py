@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 
@@ -23,7 +23,7 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/',views.base_html),# base.html为基础模板，直接引用，已挖好{% block main_page %}
-
+    url(r'^$',include('home.urls')),
 
     # 以下是主路由测试html页面，用完请注释
     # url(r'^login/',views.login),
