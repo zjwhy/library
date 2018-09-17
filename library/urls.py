@@ -23,7 +23,7 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/',views.base_html),# base.html为基础模板，直接引用，已挖好{% block main_page %}
-    url(r'^$',include('home.urls')),
+    # url(r'^$',include('home.urls')),
 
     # 以下是主路由测试html页面，用完请注释
     # url(r'^login/',views.login),
@@ -35,7 +35,7 @@ urlpatterns = [
     # url(r'^bookcase/',views.bookcase),
     # url(r'^reader_type/',views.reader_type),
     # url(r'^reader/',views.reader),
-    # url(r'^book_type/',views.book_type),
+    url(r'^book_type/',views.book_type),
     # url(r'^book/',views.book),
     # url(r'^borrow/',views.borrow),
     # url(r'^renew/',views.renew),
