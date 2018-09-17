@@ -17,8 +17,9 @@
         <div class="xs6 xm4 xs3-move xm4-move">
             <div style="height:150px;"></div>
             <div class="media media-y margin-big-bottom"></div>
-            <form action="/index/" method="get">
-            <div class="panel loginbox" style="background:url({% static '' %}tmbg-white.png); border:0px;">
+            <form action="/login/" method="post">
+            {% csrf_token %}
+            <div class="panel loginbox" style="background:url({% static '' %}tmbg-white.png); border:0;">
                 <div class="text-center margin-big padding-big-top">
                     <h1>图书管理系统</h1>
                 </div>
@@ -42,7 +43,8 @@
                         </div>
                     </div>
                 </div>
-                <div style="padding:30px;"><input type="submit" class="button button-block bg-main text-big input-big" value="登录"></div>
+                <div style="padding-top:30px;"><input type="submit" class="button button-block bg-main text-big input-big" value="登录"></div>
+                <div style="padding-top:10px;"><input type="button" class="button button-block bg-main text-big input-big btn" value="注册"></div>
             </div>
             </form>          
         </div>
@@ -50,5 +52,10 @@
 </div>
 <script src="{% static '' %}jquery-1.12.3.min.js"></script>
 <script src="{% static '' %}pintuer.js"></script>
+<script>
+    $('.btn').click(function () {
+        location='/register/';
+    });
+</script>
 </body>
 </html>
