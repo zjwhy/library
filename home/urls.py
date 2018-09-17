@@ -5,6 +5,7 @@ from home import views
 
 urlpatterns=[
     url(r'^$',views.index_view),
+    url(r'^home/$',views.home_view),
     #系统设置
     url(r'^modify/$',views.modify_view),
     #管理员设置
@@ -12,5 +13,5 @@ urlpatterns=[
     #参数设置
     url(r'^parameter/$',views.parameter_view),
     #书架设置
-    url(r'^bookcase/$',views.bookcase_view)
+    url(r'^bookcase/$',views.bookcase_view),
 ]

@@ -50,3 +50,7 @@ def parameter_view(request):
 # 书架设置
 def bookcase_view(request):
     return render(request, 'bookcase.html')
+
+
+def home_view(request):
+    return HttpResponse('123')
