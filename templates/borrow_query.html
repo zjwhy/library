@@ -1,0 +1,193 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="{% static '' %}bootstrap.css"/>
+    <link rel="stylesheet" href="{% static '' %}iconfont.css"/>
+    <link rel="stylesheet" href="{% static '' %}whole.css"/>
+    <style>
+        #page li {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<header style="background: url({% static images %}bg.jpg) no-repeat;">
+    <div class="container">
+        <h1>
+            图书馆管理系统
+            <div class="top_action">
+                <span class="btn"><i class="iconfont">&#xe767;</i>刷新页面</span>
+                <span class="btn"><i class="iconfont">&#xe75c;</i>关闭系统</span>
+            </div>
+        </h1>
+        <span class="pull-right user_id">当前登录用户：java1234</span>
+    </div>
+</header>
+<nav>
+    <div class="container">
+        <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="btn_home"><a href="#">首页</a></li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    系统设置
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">图书馆信息</a></li>
+                    <li><a href="#">管理员设置</a></li>
+                    <li><a href="#">参数设置</a></li>
+                    <li><a href="#">书架设置</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    读者管理
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">读者类型管理</a></li>
+                    <li><a href="#">读者档案管理</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    图书管理
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">图书类型管理</a></li>
+                    <li><a href="#">图书档案管理</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    图书借还
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">图书借阅</a></li>
+                    <li><a href="#">图书续借</a></li>
+                    <li><a href="#">图书归还</a></li>
+                </ul>
+            </li>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    系统查询
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">图书档案查询</a></li>
+                    <li><a href="#">图书借阅查询</a></li>
+                    <li><a href="#">借阅到期提醒</a></li>
+                </ul>
+            </li>
+            <li role="presentation"><a href="pwd_modify.html">更改口令</a></li>
+            <li role="presentation"><a href="#">退出系统</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="current_page">
+    <div class="container">
+        <span class="current_area">
+            当前位置：系统查询 > 图书借阅查询 >>>
+        </span>
+    </div>
+</div>
+<div class="main_page">
+    <div class="container">
+        <h3><i class="iconfont">&#xe707;</i>图书借阅查询</h3>
+        <div class="wrap">
+            <table class="table table-bordered">
+                <tr>
+                    <td colspan="3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                请选择查询依据：
+                            </label>
+                            <select class="form-control btn btn-danger">
+                                <option>书名</option>
+                                <option>条形码</option>
+                                <option>类别</option>
+                                <option>作者</option>
+                                <option>出版社</option>
+                                <option>书架</option>
+                            </select>
+                            <input type="text">
+                            <button>查询</button>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                借阅时间：
+                            </label>
+                            <label for="">从&nbsp;<input type="text"></label>
+                            <label for="">到&nbsp;<input type="text"></label>
+                            （日期格式为：2006-07-05）
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-bordered" style="text-align: center">
+                <tr bgcolor="#d3d3d3">
+                    <th>图书条形码</th>
+                    <th>图书名称</th>
+                    <th>读者条形码</th>
+                    <th>读者名称</th>
+                    <th>借阅时间</th>
+                    <th>应还时间</th>
+                    <th>是否归还</th>
+                </tr>
+                <tr>
+                    <td>12398390280</td>
+                    <td>js成神之路</td>
+                    <td>文学</td>
+                    <td>长江大学出版社</td>
+                    <td>A架</td>
+                    <td>么有</td>
+                    <td>不还</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<footer class="text-center">
+    <p> CopyRight © 2018 www.**********.com 北京市*****有限公司</p>
+    <p>本站请使用IE6.0或以上版本 1024*768为最佳显示效果</p>
+</footer>
+<script src="{% static '' %}jquery-1.12.3.min.js"></script>
+<script src="{% static '' %}bootstrap.min.js"></script>
+<script src="{% static '' %}bootstrap-paginator.js"></script>
+<script>
+    $(function () {
+        var currentPage = 1;
+        var totalPages = 25;
+        $("#page").bootstrapPaginator({
+            bootstrapMajorVersion: 3, //对应的bootstrap版本
+            currentPage: currentPage, //当前页数
+            numberOfPages: 10, //每次显示页数
+            totalPages: totalPages, //总页数
+            shouldShowPage: true,//是否显示该按钮
+            useBootstrapTooltip: true,
+            //点击事件
+            onPageClicked: function (event, originalEvent, type, page) {
+
+
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

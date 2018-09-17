@@ -1,0 +1,19 @@
+body{ color:#333; font-size:13px;}
+input{color:#333;}
+.bg{ width:100%; height:100%; position:absolute; }
+.panel{background:#fff;}
+form .form-group:last-child{padding-bottom:0;}
+.passcode{position:absolute;right:0;bottom:0;height:32px;margin:1px;border-left:solid 1px #ddd;text-align:center;line-height:32px;border-radius:0 4px 4px 0;}
+.field-icon-right .icon{ bottom:0px; top:auto}
+.content .title{ border-bottom:1px solid #dfdfdf; line-height:35px; font-size:14px; font-weight:bold; color:#09c}
+.form-x .form-group .label{ width:10%;}
+.form-x .form-button { margin-left:10%;}
+.w50 { width:25%; float:left;}
+.form-x .tipss{ float:left; padding-left:10px; color:#888; line-height:42px;}
+.input-help { float:left; line-height:30px;}
+.input-help li{ float:left;margin-left:10px;}
+.form-group{ margin-bottom:12px;}
+.button{ padding:10px 15px;}
+.form-group .field .file{ background:#FFF; border:0px;}
+.form-group .field input[type=radio]{ vertical-align:middle; line-height:35px; margin-right:5px;}
+.form-group .radio { line-height:35px;}
