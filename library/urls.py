@@ -33,7 +33,8 @@ urlpatterns = [
     # url(r'^manage/',views.manage),
     # url(r'^parameter/',views.parameter),
     # url(r'^bookcase/',views.bookcase),
-    # url(r'^reader_type/',views.reader_type),
+    # 读者类型
+    # url(r'^reader_type/$', views.reader_type),
     # url(r'^reader/',views.reader),
     # url(r'^book_type/',views.book_type),
     # url(r'^book/',views.book),

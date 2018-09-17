@@ -31,11 +31,12 @@ def bookcase(request):
 
 
 def reader_type(request):
-    return render(request,'reader_type.html')
+
+    return render(request,'nav.html')
 
 
 def reader(request):
-    return render(request,'reader.html')
+    return render(request,'nav.html')
 
 
 def book_type(request):
