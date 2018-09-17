@@ -12,5 +12,8 @@ urlpatterns=[
     #参数设置
     url(r'^parameter/$',views.parameter_view),
     #书架设置
-    url(r'^bookcase/$',views.bookcase_view)
+    url(r'^bookcase/$',views.bookcase_view),
+    #添加书架
+    url(r'^add_case/$',views.add_case_view),
+
 ]
