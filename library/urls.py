@@ -22,8 +22,8 @@ from library.settings import MEDIA_ROOT
 from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^base/',views.base_html),# base.html为基础模板，直接引用，已挖好{% block main_page %}
-    url(r'^$',include('home.urls')),
+    # url(r'^base/',views.base_html),# base.html为基础模板，直接引用，已挖好{% block main_page %}
+    url(r'^',include('home.urls')),
 
     # 以下是主路由测试html页面，用完请注释
     # url(r'^login/',views.login),

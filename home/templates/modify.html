@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block main_page %}
+
+<div class="container">
+    <h3><i class="iconfont">&#xe615;</i>图书馆信息</h3>
+    <div class="wrap">
+        <form name="form1" action="" method="post">
+            <table>
+                <tbody>
+                <tr align="center">
+                    <td width="20%" align="left" style="padding:5px;">图书馆名称：</td>
+                    <td width="80%" align="left">
+                        <input name="libraryname" type="text" id="libraryname" value="是" size="30">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">馆长：</td>
+                    <td align="left"><input name="curator" type="text" id="curator" size="30" value="wgh"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系电话：</td>
+                    <td align="left"><input name="tel" type="text" id="tel" size="30" value="1363********"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系地址：</td>
+                    <td align="left"><input name="address" type="text" id="address" size="30" value="ccs"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系邮箱：</td>
+                    <td align="left"><input name="email" type="text" id="email" size="30" value="wgh717@****.com">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">图书馆网址：</td>
+                    <td align="left"><input name="url" type="text" id="url" size="30" value="http://"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">建馆时间：</td>
+                    <td align="left"><input name="createDate" type="text" id="createDate" size="30"
+                                            value="1999-05-06">
+                    </td>
+                </tr>
+                <tr>
+                    <td height="84" align="left" style="padding:5px;">图书馆简介：</td>
+                    <td align="left"><textarea name="introduce" cols="50" rows="5" class="wenbenkuang"
+                                               id="introduce">是</textarea></td>
+                </tr>
+                <tr>
+                    <td height="65" align="left" style="padding:5px;">&nbsp;</td>
+                    <td><input name="Submit" type="button" class="btn_grey" value="保存"
+                               onclick="return checkForm(form1)">
+                        &nbsp;
+                        <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

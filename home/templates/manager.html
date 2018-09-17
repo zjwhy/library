@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    <div class="container">
+        <h3><i class="iconfont">&#xe605;</i>管理员设置</h3>
+        <div class="wrap">
+            <p class="manage_tool"><a href="">添加管理员信息</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                <tr class="text-center" bgcolor="#d3d3d3">
+                    <th>管理员名称</th>
+                    <th>系统设置</th>
+                    <th>读者管理</th>
+                    <th>图书管理</th>
+                    <th>图书借还</th>
+                    <th>系统查询</th>
+                    <th>权限设置</th>
+                    <th>删除</th>
+                </tr>
+                <tr>
+                    <td align="center">java1234</td>
+                    <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
+                    <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
+                    <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
+                    <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
+                    <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
+                    <td align="center"><a href="">权限设置</a></td>
+                    <td align="center"><a href="">删除</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
