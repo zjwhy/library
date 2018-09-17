@@ -1,10 +1,70 @@
 {% extends 'base.html' %}
 {% block main_page %}
-
+{% if con %}
 <div class="container">
     <h3><i class="iconfont">&#xe615;</i>图书馆信息</h3>
     <div class="wrap">
         <form name="form1" action="" method="post">
+            {% csrf_token %}
+            <table>
+                <tbody>
+                <tr align="center">
+                    <td width="20%" align="left" style="padding:5px;">图书馆名称：</td>
+                    <td width="80%" align="left">
+                        <input name="libraryname" type="text" id="libraryname" value="{{ con.name }}" size="30">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">馆长：</td>
+                    <td align="left"><input name="curator" type="text" id="curator" size="30" value="{{ con.curator }}"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系电话：</td>
+                    <td align="left"><input name="tel" type="text" id="tel" size="30" value="{{ con.tel }}"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系地址：</td>
+                    <td align="left"><input name="address" type="text" id="address" size="30" value="{{ con.address }}"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">联系邮箱：</td>
+                    <td align="left"><input name="email" type="text" id="email" size="30" value="{{ con.email }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">图书馆网址：</td>
+                    <td align="left"><input name="url" type="text" id="url" size="30" value="{{ con.url }}"></td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px;">建馆时间：</td>
+                    <td align="left"><input name="createDate" type="text" id="createDate" size="30"
+                                            value="{{ con.create_date}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td height="84" align="left" style="padding:5px;">图书馆简介：</td>
+                    <td align="left"><textarea name="introduce" cols="50" rows="5" class="wenbenkuang"
+                                               id="introduce">{{ con.introduce }}</textarea></td>
+                </tr>
+                <tr>
+                    <td height="65" align="left" style="padding:5px;">&nbsp;</td>
+                    <td><input name="Submit" type="submit" class="btn_grey" value="保存"
+                               onclick="return checkForm(form1)">
+                        &nbsp;
+                        <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <h3><i class="iconfont">&#xe615;</i>图书馆信息</h3>
+    <div class="wrap">
+        <form name="form1" action="" method="post">
+            {% csrf_token %}
             <table>
                 <tbody>
                 <tr align="center">
@@ -48,7 +108,7 @@
                 </tr>
                 <tr>
                     <td height="65" align="left" style="padding:5px;">&nbsp;</td>
-                    <td><input name="Submit" type="button" class="btn_grey" value="保存"
+                    <td><input name="Submit" type="submit" class="btn_grey" value="保存"
                                onclick="return checkForm(form1)">
                         &nbsp;
                         <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
@@ -58,6 +118,6 @@
         </form>
     </div>
 </div>
-
+{% endif %}
 
 {% endblock %}
