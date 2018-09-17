@@ -6,7 +6,7 @@ from django.db import models
 # 书架
 class Bookcase(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    name = models.CharField(max_length=30, blank=True, null=True)
+    name = models.CharField(max_length=30,unique=True, blank=True, null=True)
     # column_3 = models.CharField(db_column='Column_3', max_length=10, blank=True, null=True)  # Field name made lowercase.
     class Meta:
         db_table = 't_bookcase'
@@ -104,7 +104,7 @@ class Reader(models.Model):
 class Manager(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     name = models.CharField(max_length=30, blank=True, null=True)
-    pwd = models.CharField(db_column='PWD', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    pwd = models.CharField(db_column='PWD', max_length=30, blank=True, null=False)  # Field name made lowercase.
 
     class Meta:
         db_table = 't_manager'
