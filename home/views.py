@@ -50,3 +50,10 @@ def parameter_view(request):
 # 书架设置
 def bookcase_view(request):
     return render(request, 'bookcase.html')
+
+# 读者类型
+def reader_type(request):
+    if request.method == "GET":
+    # number 可借数  name读者类型
+
+        return render(request,"read_type.html")

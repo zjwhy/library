@@ -12,5 +12,7 @@ urlpatterns=[
     #参数设置
     url(r'^parameter/$',views.parameter_view),
     #书架设置
-    url(r'^bookcase/$',views.bookcase_view)
+    url(r'^bookcase/$',views.bookcase_view),
+    #读者类型
+    url(r'^reader_type/$', views.reader_type),
 ]
