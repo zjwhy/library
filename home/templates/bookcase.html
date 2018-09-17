@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    <div class="container">
+        <h3><i class="iconfont">&#xe757;</i>书架设置</h3>
+        <div class="wrap">
+            <p class="manage_tool"><a href="">添加书架信息</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                <tr align="center" bgcolor="#d3d3d3">
+                    <th width="70%">书架名称</th>
+                    <th width="16%">修改</th>
+                    <th width="14%">删除</th>
+                </tr>
+
+                <tr>
+                    <td style="padding:5px;">A架</td>
+                    <td align="center"><a href="#"
+                                          onclick="window.open('bookCase.do?action=bookCaseModifyQuery&amp;ID=3','','width=292,height=175')">修改</a>
+                    </td>
+                    <td align="center"><a href="bookCase.do?action=bookCaseDel&amp;ID=3">删除</a></td>
+                </tr>
+
+                <tr>
+                    <td style="padding:5px;">B架</td>
+                    <td align="center"><a href="#"
+                                          onclick="window.open('bookCase.do?action=bookCaseModifyQuery&amp;ID=4','','width=292,height=175')">修改</a>
+                    </td>
+                    <td align="center"><a href="bookCase.do?action=bookCaseDel&amp;ID=4">删除</a></td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
