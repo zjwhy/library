@@ -1,0 +1,61 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>图书管理系统</title>
+    <link rel="stylesheet" href="{% static '' %}pintuer.css">
+    <link rel="stylesheet" href="{% static '' %}admin.css">
+</head>
+<body>
+<div class="bg" style="background:url({% static '' %}bg.jpg);"></div>
+<div class="container">
+    <div class="line bouncein">
+        <div class="xs6 xm4 xs3-move xm4-move">
+            <div style="height:150px;"></div>
+            <div class="media media-y margin-big-bottom"></div>
+            <form action="/login/" method="post">
+            {% csrf_token %}
+            <div class="panel loginbox" style="background:url({% static '' %}tmbg-white.png); border:0;">
+                <div class="text-center margin-big padding-big-top">
+                    <h1>图书管理系统</h1>
+                </div>
+                <div class="panel-body" style="padding:30px; padding-bottom:10px; padding-top:10px;">
+                    <div class="form-group">
+                        <div class="field field-icon-right">
+                            <input type="text" class="input input-big" name="name" placeholder="管理员登录账号" data-validate="required:请填写账号" />
+                            <span class="icon icon-user margin-small"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field field-icon-right">
+                            <input type="password" class="input input-big" name="password" placeholder="管理员登录密码" data-validate="required:请填写密码" />
+                            <span class="icon icon-key margin-small"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field">
+                            <input type="text" class="input input-big" name="code" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
+                            <img src="{% static '' %}passcode.jpg" alt="" width="100" height="32" class="passcode" style="height:43px;cursor:pointer;" onclick="this.src=this.src+'?'">
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-top:30px;"><input type="submit" class="button button-block bg-main text-big input-big" value="登录"></div>
+                <div style="padding-top:10px;"><input type="button" class="button button-block bg-main text-big input-big btn" value="注册"></div>
+            </div>
+            </form>          
+        </div>
+    </div>
+</div>
+<script src="{% static '' %}jquery-1.12.3.min.js"></script>
+<script src="{% static '' %}pintuer.js"></script>
+<script>
+    $('.btn').click(function () {
+        location='/register/';
+    });
+</script>
+</body>
+</html>

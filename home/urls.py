@@ -1,9 +1,11 @@
 #coding=utf-8
 from django.conf.urls import url
-
-from home import views
+import views
 
 urlpatterns=[
+    url(r'^login/',views.login_view),
+    url(r'^register/',views.register_view),
+    url(r'^home/$',views.home_view),
     url(r'^$',views.index_view),
     #系统设置
     url(r'^modify/$',views.modify_view),

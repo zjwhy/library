@@ -1,4 +1,5 @@
 #coding=utf-8
+from django.http import HttpResponse
 from django.shortcuts import render
 
 
@@ -72,3 +73,6 @@ def bremind(request):
 
 def base_html(request):
     return render(request,'base.html')
+
+
+
