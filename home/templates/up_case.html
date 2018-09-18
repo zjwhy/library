@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block main_page %}
+       <div class="wrap">
+            <p class="manage_tool"><a href="/bookcase/">返回书架展示页面</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                    <form action="/up_case/?id={{ up_case.id }}" method="post">
+                        {% csrf_token %}
+                        <tr>
+                            <td style="padding:5px;">修改名<input type="text" name="up_name"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;"><input type="submit" value="提交"></td>
+                        </tr>
+                    </form>
+                </tbody>
+
+            </table>
+        </div>
+{% endblock %}

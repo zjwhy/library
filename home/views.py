@@ -25,10 +25,10 @@ def modify_view(request):
         introduce = request.POST.get("introduce", "")
         if Library.objects.first():
             Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate, introduce=introduce)
+                                   createdate=createDate, introduce=introduce)
         else:
             Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate,introduce=introduce)
+                                   createdate=createDate,introduce=introduce)
         # print '执行到这'
         con = Library.objects.first()
         return render(request, 'modify.html',{"con":con})
@@ -71,3 +71,20 @@ def add_case_view(request):
             Bookcase.objects.create(name=add_name)
             return render(request,'add.html')
 
+#修改书架
+def up_case_view(request):
+    if request.method == 'GET':
+        id = request.GET.get('id','')
+        print id
+        up_case = Bookcase.objects.get(id=id)
+        # for i in up_case:
+        print up_case.name
+        return render(request, 'up_case.html',{'up_case':up_case})
+    else:
+        # print '111111'
+        nid = request.GET.get('id','')
+        # print nid
+        nid = int(nid)
+        up_name = request.POST.get('up_name','')
+        Bookcase.objects.filter(id=nid).update(name=up_name)
+        return HttpResponse('123')
