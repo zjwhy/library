@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 
@@ -25,10 +26,10 @@ def modify_view(request):
         introduce = request.POST.get("introduce", "")
         if Library.objects.first():
             Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate, introduce=introduce)
+                                   createdate=createDate, introduce=introduce)
         else:
             Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate,introduce=introduce)
+                                   createdate=createDate,introduce=introduce)
         # print '执行到这'
         con = Library.objects.first()
         return render(request, 'modify.html',{"con":con})
@@ -51,8 +52,69 @@ def parameter_view(request):
 
 # 书架设置
 def bookcase_view(request):
-    bookcase = Bookcase.objects.all()
-    return render(request, 'bookcase.html',{'bookcase':bookcase})
+
+    return render(request, 'bookcase.html')
+
+# 分页
+def page(num=1):
+    size = 1
+    paginator = Paginator(BookInfo.objects.all().order_by('-count'),size)
+    if num <= 0:
+        num = 1
+    if num > paginator.num_pages:
+        num = paginator.num_pages
+    current_page = num
+    total_page = paginator.num_pages
+    page_list = [current_page,total_page]
+    return paginator.page(num), page_list
+
+# 主页
+def home_view(request,num=1):
+    # num = request.GET.get('num','1')
+    num = int(num)
+    books,page_list = page(num)
+    return render(request,'index.html',{'books':books,'page_list':page_list})
+
+def login_view(request):
+    if request.method=='GET':
+        return render(request, 'login.html')
+    else:
+        #接受数据
+        name = request.POST.get('name','')
+        pwd = request.POST.get('password','')
+        print name,pwd
+
+        #判断是否登录成功
+
+        count= Manager.objects.filter(name=name,pwd=pwd).count()
+
+        if count == 1:
+            return redirect('/home/')
+
+        else:
+            return redirect('/login/')
+
+
+def register_view(request):
+    if request.method=='GET':
+        return render(request,'register.html')
+    else:
+        #接受数据
+        name = request.POST.get('name','')
+        pwd = request.POST.get('password','')
+
+        # print name,password
+
+        try:
+            manage = Manager.objects.get(name=name,pwd=pwd)
+        except Manager.DoesNotExist:
+            manage = Manager.objects.create(name=name,pwd=pwd)
+
+        # manageInfo = Manager.objects.create(manage=manage)
+
+        return redirect('/login/')
+
+
 
 # #添加管理员系统
 # def add_managerview(request):
@@ -70,4 +132,5 @@ def add_case_view(request):
         else:
             Bookcase.objects.create(name=add_name)
             return render(request,'add.html')
+
 
