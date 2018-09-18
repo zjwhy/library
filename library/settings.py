@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',#配置media
+                'home.my_context_processors.myData',
             ],
         },
     },
@@ -84,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'library',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '123123',
         'PORT': '3306',
         'HOST': '127.0.0.1',
     }
