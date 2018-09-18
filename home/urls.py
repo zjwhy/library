@@ -34,6 +34,8 @@ urlpatterns=[
     #图书档案管理
     url(r'^book/$',views.book_view),
     #添加图书
-    url(r'^add_book/$',views.add_book_view)
+    url(r'^add_book/$',views.add_book_view),
+    #修改图书
+    url(r'^up_book/$',views.up_book_view)
 
 ]

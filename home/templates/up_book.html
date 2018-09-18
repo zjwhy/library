@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block main_page %}
+         <div class="container">
+        <div class="wrap">
+            <p class="manage_tool"><a href="/book/">图书档案展示</a></p>
+     <form action="/up_book/?id={{ id }}" method="post">
+            <table class="table table-bordered">
+                <tbody>
+
+                        {% csrf_token %}
+                         <tr>
+                            <td style="padding:5px;">条形码<input type="text" name="barcode"></td>
+                         </tr>
+                         <tr>
+                             <td style="padding:5px;">书&emsp;名<input type="text" name="bookname"></td>
+                        </tr>
+ <tr>
+                             <td style="padding:5px;">作&emsp;者<input type="text" name="author"></td>
+                        </tr>
+                         <tr>
+                             <td style="padding:5px;">价&emsp;格<input type="text" name="price"></td>
+                        </tr>
+                         <tr>
+                             <td style="padding:5px;">类&emsp;型
+
+                                 <select name="type" id="">
+                                     {% for type in all_type %}
+                                        <option value="{{ type.typename }}">{{ type.typename }}</option>
+                                     {% endfor %}
+                                 </select>
+
+                             </td>
+                        </tr>
+                         <tr>
+                             <td style="padding:5px;">书&emsp;架
+
+                                  <select name="case" id="">
+                                      {% for case in all_case %}
+                                        <option value="{{ case.name }}">{{ case.name }}</option>
+                                      {% endfor %}
+                                  </select>
+
+                             </td>
+                        </tr>
+
+                         <tr>
+                             <td style="padding:5px;">出版社
+
+                                <select name="pub" id="">
+                                    {% for pub in all_pub %}
+                                        <option value="{{ pub.name }}">{{ pub.name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                             </td>
+                        </tr>
+                         <tr>
+                             <td style="padding:5px;">馆藏数量<input type="text" name="number"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;"><input type="submit" value="修改"></td>
+                        </tr>
+
+                </tbody>
+
+            </table>
+     </form>
+        </div>
+    </div>
+{% endblock %}
