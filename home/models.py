@@ -6,7 +6,7 @@ from django.db import models
 # 书架
 class Bookcase(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    name = models.CharField(max_length=30,unique=True, blank=True, null=True)
+    name = models.CharField(max_length=30,unique=True, blank=True)
     # column_3 = models.CharField(db_column='Column_3', max_length=10, blank=True, null=True)  # Field name made lowercase.
     class Meta:
         db_table = 't_bookcase'
@@ -14,8 +14,8 @@ class Bookcase(models.Model):
 # 图书类型
 class BookType(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    typename = models.CharField(max_length=30, blank=True, null=True)
-    days = models.IntegerField(blank=True, null=True)
+    typename = models.CharField(max_length=30,unique=True,blank=True)
+    days = models.IntegerField(blank=True)
 
     class Meta:
         db_table = 't_booktype'
@@ -24,7 +24,7 @@ class BookType(models.Model):
 class Publishing(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     # isbn = models.CharField(db_column='ISBN', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    name = models.CharField(max_length=30, blank=True, null=True,verbose_name='出版社名称')
+    name = models.CharField(max_length=30,unique=True,blank=True,verbose_name='出版社名称')
 
     class Meta:
         db_table = 't_publishing'
@@ -32,12 +32,12 @@ class Publishing(models.Model):
 # 图书信息
 class BookInfo(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    barcode = models.CharField(max_length=30, blank=True, null=True,verbose_name='条形码')
-    bookname = models.CharField(max_length=70, blank=True, null=True,verbose_name='书名')
+    barcode = models.CharField(max_length=30, blank=True,verbose_name='条形码')
+    bookname = models.CharField(max_length=70, blank=True,verbose_name='书名')
     booktype = models.ForeignKey(BookType,on_delete=models.CASCADE)
-    author = models.CharField(max_length=30, blank=True, null=True,verbose_name='作者')
+    author = models.CharField(max_length=30, blank=True,verbose_name='作者')
     # isbn = models.CharField(db_column='ISBN', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    price = models.FloatField(blank=True, null=True,verbose_name='价格')
+    price = models.FloatField(blank=True,verbose_name='价格')
     # page = models.IntegerField(blank=True, null=True,verbose_name='书页')
     bookcase = models.ForeignKey(Bookcase,on_delete=models.CASCADE)
     bookpub = models.ForeignKey(Publishing,on_delete=models.CASCADE)
@@ -55,14 +55,14 @@ class BookInfo(models.Model):
 # 图书馆
 class Library(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    name = models.CharField(max_length=50, blank=True, null=True,verbose_name='图书馆名称')
-    curator = models.CharField(max_length=10, blank=True, null=True,verbose_name='馆长')
-    tel = models.CharField(max_length=20, blank=True, null=True,verbose_name='联系电话')
-    address = models.CharField(max_length=100, blank=True, null=True,verbose_name='联系地址')
-    email = models.CharField(max_length=100, blank=True, null=True,verbose_name='联系邮箱')
-    url = models.CharField(max_length=100, blank=True, null=True,verbose_name='图书馆地址')
-    createdate = models.DateField(db_column='createDate', blank=True, null=True,verbose_name='建管时间')  # Field name made lowercase.
-    introduce = models.TextField(blank=True, null=True,verbose_name='图书馆简介')
+    name = models.CharField(max_length=50, blank=True,verbose_name='图书馆名称')
+    curator = models.CharField(max_length=10, blank=True,verbose_name='馆长')
+    tel = models.CharField(max_length=20, blank=True,verbose_name='联系电话')
+    address = models.CharField(max_length=100, blank=True,verbose_name='联系地址')
+    email = models.CharField(max_length=100, blank=True, verbose_name='联系邮箱')
+    url = models.CharField(max_length=100, blank=True,verbose_name='图书馆地址')
+    createdate = models.DateField(db_column='createDate', blank=True,verbose_name='建管时间')  # Field name made lowercase.
+    introduce = models.TextField(blank=True,verbose_name='图书馆简介')
 
     class Meta:
         db_table = 't_library'
@@ -70,7 +70,7 @@ class Library(models.Model):
 # 性别
 class Sex(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    sex = models.CharField(max_length=4, blank=True, null=True, verbose_name='性别')
+    sex = models.CharField(max_length=4, blank=True,unique=True,verbose_name='性别')
 
     class Meta:
         db_table = 't_sex'
@@ -78,8 +78,8 @@ class Sex(models.Model):
 # 读者类型
 class ReaderType(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=50, blank=True, null=True, verbose_name='读者类型')
-    number = models.IntegerField(blank=True, null=True, verbose_name='可借数量')
+    name = models.CharField(max_length=50, blank=True,verbose_name='读者类型')
+    number = models.IntegerField(blank=True,verbose_name='可借数量')
 
     class Meta:
         db_table = 't_readertype'
@@ -87,12 +87,12 @@ class ReaderType(models.Model):
 # 读者信息
 class Reader(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(max_length=20, blank=True, null=True, verbose_name='读者姓名')
+    name = models.CharField(max_length=20, blank=True, verbose_name='读者姓名')
     sex = models.ForeignKey(Sex, on_delete=models.CASCADE)
-    barcode = models.CharField(max_length=30, blank=True, null=True, verbose_name='条形码')
-    tel = models.CharField(max_length=20, blank=True, null=True, verbose_name='电话')
-    email = models.CharField(max_length=100, blank=True, null=True, verbose_name='Email')
-    created = models.DateField(blank=True, null=True, verbose_name='创建日期')
+    barcode = models.CharField(max_length=30, blank=True, verbose_name='条形码')
+    tel = models.CharField(max_length=20, blank=True,verbose_name='电话')
+    email = models.CharField(max_length=100, blank=True,verbose_name='Email')
+    created = models.DateField(blank=True,verbose_name='创建日期')
     readertype = models.ForeignKey(ReaderType, on_delete=models.CASCADE)
 
     class Meta:
@@ -104,8 +104,8 @@ class Reader(models.Model):
 # 管理员
 class Manager(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    name = models.CharField(max_length=30, blank=True, null=True)
-    pwd = models.CharField(db_column='PWD', max_length=30, blank=True, null=False)  # Field name made lowercase.
+    name = models.CharField(max_length=30,unique=True, blank=True)
+    pwd = models.CharField(db_column='PWD', max_length=30, blank=True)  # Field name made lowercase.
 
     class Meta:
         db_table = 't_manager'
@@ -113,8 +113,8 @@ class Manager(models.Model):
 # 参数
 class Parameter(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    cost = models.IntegerField(blank=True, null=True,verbose_name='办证费')
-    validity = models.IntegerField(blank=True, null=True,verbose_name='有效期限')
+    cost = models.IntegerField(blank=True,verbose_name='办证费')
+    validity = models.IntegerField(blank=True,verbose_name='有效期限')
 
     class Meta:
         db_table = 't_parameter'
@@ -123,11 +123,11 @@ class Parameter(models.Model):
 class Purview(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     manager = models.ForeignKey(Manager,models.CASCADE)#管理员权限
-    sysset = models.IntegerField(blank=True, null=True,verbose_name='系统设置')
-    readerset = models.IntegerField(blank=True, null=True,verbose_name='读者管理')
-    bookset = models.IntegerField(blank=True, null=True,verbose_name='图书管理')
-    borrowback = models.IntegerField(blank=True, null=True,verbose_name='借还管理')
-    sysquery = models.IntegerField(blank=True, null=True,verbose_name='系统查询')
+    sysset = models.IntegerField(blank=True,verbose_name='系统设置')
+    readerset = models.IntegerField(blank=True,verbose_name='读者管理')
+    bookset = models.IntegerField(blank=True,verbose_name='图书管理')
+    borrowback = models.IntegerField(blank=True,verbose_name='借还管理')
+    sysquery = models.IntegerField(blank=True,verbose_name='系统查询')
     class Meta:
         db_table = 't_purview'
 
@@ -152,8 +152,8 @@ class Giveback(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     reader = models.ForeignKey(Reader, on_delete=models.CASCADE)
     book = models.ForeignKey(BookInfo, on_delete=models.CASCADE)
-    backtime = models.DateField(blank=True, null=True,verbose_name='归还时间')
-    operator = models.CharField(max_length=30, blank=True, null=True,verbose_name='操作者')
+    backtime = models.DateField(blank=True,verbose_name='归还时间')
+    operator = models.CharField(max_length=30, blank=True,verbose_name='操作者')
 
     class Meta:
         db_table = 't_giveback'

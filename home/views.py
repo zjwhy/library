@@ -142,19 +142,75 @@ def add_case_view(request):
             Bookcase.objects.create(name=add_name)
             return render(request,'add.html')
 
+# 图书字段查询函数封装
+def select(select,search):
+    if select == 'barcode':
+        book_infos = BookInfo.objects.filter(barcode__contains=search)
+    elif select == 'bookname':
+        book_infos = BookInfo.objects.filter(bookname__contains=search)
+    elif select == 'author':
+        book_infos = BookInfo.objects.filter(author__contains=search)
+    elif select == 'booktype':
+        id = BookType.objects.get(typename__contains=search).id
+        book_infos = BookInfo.objects.filter(booktype=id)
+    elif select == 'bookcase':
+        id = Bookcase.objects.get(name__contains=search).id
+        book_infos = BookInfo.objects.filter(bookcase=id)
+    elif select == 'bookpub':
+        id = Publishing.objects.get(name__contains=search).id
+        book_infos = BookInfo.objects.filter(bookpub=id)
+    return book_infos
+# 图书档案查询
+def book_info_search_view(request):
+    if request.method == 'GET':
+        books = BookInfo.objects.order_by('-count').first()
+        return render(request,'book_info_search.html',{'books':books})
+    else:
+        select = request.POST.get('select','')
+        search = request.POST.get('search','')
+        # print select,search
+        book_infos = select(select,search)
+        return  render(request,'book_info_search.html',{'book_infos':book_infos})
+
+# 图书借阅查询
+def borrow_search_view(request):
+    if request.method == 'GET':
+        return render(request, 'borrow_search.html')
+    else:
+        select = request.POST.get('select', '')
+        search = request.POST.get('search', '')
+        # book_infos = select(select,search)
+        borrows = Borrow.objects.all()
+        print borrows
+        return render(request, 'borrow_search.html', {'borrows': borrows})
+# 借阅到期提醒
+def borrow_remind_view(request):
+    return render(request,'borrow_remind.html')
+
+
+#图书借阅
+def borrow_view(request):
+
+    return render(request,'borrow.html')
+
+#图书续借
+def renew_view(request):
+    return render(request,'renew.html')
+
+#图书归还
+def book_back_view(request):
+    return render(request,'book_back.html')
+
 
 #添加更改口令功能
 def pwd_modify_view(request):
     if request.method == 'GET':
         return render(request,'pwd_modify.html')
-
     else:
         name = request.POST.get('name','')
         pwd = request.POST.get('oldpwd','')
         newpwd = request.POST.get('pwd','')
         newpwd1 = request.POST.get('pwd1','')
-
-
         if newpwd==newpwd1:
             manager = Manager.objects.filter(name=name, pwd=pwd)
             print manager
@@ -165,20 +221,3 @@ def pwd_modify_view(request):
             return HttpResponse('请检查原密码是否输入正确!')
         # elif len(name) == 0:
         #     return  HttpResponse('请检查用户名是否正确!')
-
-
-
-
-
-#图书借阅
-def borrow_view(request):
-
-    return render(request,'borrow.html')
-
-
-def renew_view(request):
-    return render(request,'renew.html')
-
-
-def book_back_view(request):
-    return render(request,'book_back.html')

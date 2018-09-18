@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    <div class="container">
+        <h3><i class="iconfont">&#xe707;</i>图书档案查询</h3>
+        <div class="wrap">
+        <form action="/book_info_search/" method="post">
+            {% csrf_token %}
+            <table class="table table-bordered">
+                <tr></tr>
+                <tr>
+                    <td colspan="3">
+                        <span class="search_foot">
+                            <i class="iconfont">&#xe768;</i>
+                            请输入查询依据：
+                        </span>
+                            <select name="select" class="form-control btn btn-danger">
+                                <option value="bookname">书名</option>
+                                <option value="barcode">条形码</option>
+                                <option value="booktype">类别</option>
+                                <option value="author">作者</option>
+                                <option value="bookpub">出版社</option>
+                                <option value="bookcase">书架</option>
+                            </select>
+                        <input type="text" name="search">
+                        <input type="submit" value="查询">
+
+                    </td>
+                </tr>
+            </table>
+            </form>
+            <table class="table table-bordered" style="text-align: center">
+                <tr bgcolor="#d3d3d3">
+                    <th>条形码</th>
+                    <th>图书名称</th>
+                    <th>作者</th>
+                    <th>图书类型</th>
+                    <th>出版社</th>
+                    <th>书架</th>
+                </tr>
+                {% if not books %}
+                    {% for book_info in book_infos %}
+                    <tr>
+                        <td>{{ book_info.barcode }}</td>
+                        <td>{{ book_info.bookname }}</td>
+                        <td>{{ book_info.author }}</td>
+                        <td>{{ book_info.booktype.typename }}</td>
+                        <td>{{ book_info.bookpub.name }}</td>
+                        <td>{{ book_info.bookcase.name }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+
+                <tr>
+                    <td>12398390280</td>
+                    <td>js成神之路</td>
+                    <td>js</td>
+                    <td>文学</td>
+                    <td>长江大学出版社</td>
+                    <td>A架</td>
+                </tr>
+                {% endif %}
+
+            </table>
+        </div>
+    </div>
+{% endblock %}
