@@ -72,23 +72,32 @@ def page(num=1):
 def home_view(request,num=1):
     # num = request.GET.get('num','1')
     num = int(num)
+    global username
+    # print username
     books,page_list = page(num)
     return render(request,'index.html',{'books':books,'page_list':page_list})
 
+
+username = 'admin'
+# 登录
 def login_view(request):
+    global username
     if request.method=='GET':
+        username = 'admin'
         return render(request, 'login.html')
     else:
         #接受数据
         name = request.POST.get('name','')
         pwd = request.POST.get('password','')
-        print name,pwd
+        # print name,pwd
 
         #判断是否登录成功
 
         count= Manager.objects.filter(name=name,pwd=pwd).count()
 
         if count == 1:
+
+            username = name
             return redirect('/home/')
 
         else:
@@ -178,3 +187,41 @@ def borrow_search_view(request):
 
 def borrow_remind_view(request):
     return render(request,'borrow_remind.html')
+
+
+
+
+
+#图书借阅
+def borrow_view(request):
+
+    return render(request,'borrow.html')
+
+#图书续借
+def renew_view(request):
+    return render(request,'renew.html')
+
+#图书归还
+def book_back_view(request):
+    return render(request,'book_back.html')
+
+
+#添加更改口令功能
+def pwd_modify_view(request):
+    if request.method == 'GET':
+        return render(request,'pwd_modify.html')
+    else:
+        name = request.POST.get('name','')
+        pwd = request.POST.get('oldpwd','')
+        newpwd = request.POST.get('pwd','')
+        newpwd1 = request.POST.get('pwd1','')
+        if newpwd==newpwd1:
+            manager = Manager.objects.filter(name=name, pwd=pwd)
+            print manager
+            if newpwd:
+                manager.update (pwd=newpwd)  #如果用户名、原密码匹配则更新密码
+                return redirect('/login/')
+        else:
+            return HttpResponse('请检查原密码是否输入正确!')
+        # elif len(name) == 0:
+        #     return  HttpResponse('请检查用户名是否正确!')
