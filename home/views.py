@@ -172,24 +172,20 @@ def book_info_search_view(request):
         book_infos = select(select,search)
         return  render(request,'book_info_search.html',{'book_infos':book_infos})
 
-
+# 图书借阅查询
 def borrow_search_view(request):
     if request.method == 'GET':
-        return render(request,'borrow_search.html')
+        return render(request, 'borrow_search.html')
     else:
         select = request.POST.get('select', '')
         search = request.POST.get('search', '')
         # book_infos = select(select,search)
         borrows = Borrow.objects.all()
         print borrows
-        return render(request,'borrow_search.html',{'borrows':borrows})
-
-
+        return render(request, 'borrow_search.html', {'borrows': borrows})
+# 借阅到期提醒
 def borrow_remind_view(request):
     return render(request,'borrow_remind.html')
-
-
-
 
 
 #图书借阅
