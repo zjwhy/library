@@ -39,7 +39,8 @@ class BookInfo(models.Model):
     # isbn = models.CharField(db_column='ISBN', max_length=20, blank=True, null=True)  # Field name made lowercase.
     price = models.FloatField(blank=True, null=True,verbose_name='价格')
     # page = models.IntegerField(blank=True, null=True,verbose_name='书页')
-    bookcase = models.IntegerField(blank=True, null=True,verbose_name='书架')
+    bookcase = models.ForeignKey(Bookcase,on_delete=models.CASCADE)
+    bookpub = models.ForeignKey(Publishing,on_delete=models.CASCADE)
     # intime = models.DateField(db_column='inTime', blank=True, null=True,verbose_name='馆藏日期')  # Field name made lowercase.
     # operator = models.CharField(max_length=30, blank=True, null=True,verbose_name='操作者')
     # del_field = models.IntegerField(db_column='del', blank=True, null=True,verbose_name='撤管时间')  # Field renamed because it was a Python reserved word.
