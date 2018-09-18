@@ -47,8 +47,22 @@ def manager_view(request):
 
 # 参数设置
 def parameter_view(request):
-    return render(request, 'parameter_c.html')
-
+    if request.method == 'GET':
+        con = Parameter.objects.first()
+        # print con
+        return render(request, 'parameter_c.html',{'con':con})
+    else:
+        cost = request.POST.get('cost','')
+        validity = request.POST.get('validity','')
+        new_con = Parameter.objects.filter(cost=cost,validity=validity)
+        if new_con:
+            Parameter.objects.filter(cost=cost,validity=validity).update(cost=cost,validity=validity)
+            con = Parameter.objects.first()
+            return render(request, 'parameter_c.html',{'con':con})
+        else:
+            Parameter.objects.create(cost=cost,validity=validity)
+            con = Parameter.objects.first()
+            return render(request, 'parameter_c.html',{'con':con})
 
 # 书架设置
 def bookcase_view(request):
@@ -172,4 +186,7 @@ def del_case_view(request):
         # del_case[0].delete()
         # for i in up_case:
         # print up_case.name
+
+
+
 
