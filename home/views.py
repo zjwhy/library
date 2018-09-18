@@ -337,6 +337,13 @@ def up_book_view(request):
             return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
 
 #删除图书
+def del_book_view(request):
+    id = request.GET.get('id','')
+    BookInfo.objects.filter(id=id).delete()
+    return HttpResponse('<script>alert("删除成功");location.href="/book/"</script>')
+
+
+
 # 图书借阅查询
 def borrow_search_view(request):
     if request.method == 'GET':

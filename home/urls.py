@@ -37,10 +37,8 @@ urlpatterns=[
     url(r'^add_book/$',views.add_book_view),
     #修改图书
     url(r'^up_book/$',views.up_book_view),
-
-
-
-
+    #删除图书
+    url(r'^del_book/$',views.del_book_view),
     #图书借阅
     url(r'^borrow/$',views.borrow_view),
 
