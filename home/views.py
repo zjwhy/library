@@ -231,3 +231,37 @@ def del_type_view(request):
         else:
             BookType.objects.filter(id=id).delete()
             return HttpResponse('<script>alert("删除成功");location.href="/booktype/"</script>')
+
+#图书档案管理
+def book_view(request):
+    all_book = BookInfo.objects.all()
+    return render(request,'book.html',{'all_book':all_book})
+
+#图书添加功能
+def add_book_view(request):
+    if request.method == 'GET':
+        all_type = BookType.objects.all()
+        all_case = Bookcase.objects.all()
+        all_pub = Publishing.objects.all()
+        return render(request, 'add_book.html', {'all_type': all_type, 'all_case': all_case, 'all_pub': all_pub})
+    else:
+        barcode = request.POST.get('barcode','')
+        bookname = request.POST.get('bookname','')
+        author = request.POST.get('author','')
+        price = request.POST.get('price','')
+        type = request.POST.get('type','')
+        case = request.POST.get('case','')
+        pub = request.POST.get('pub','')
+        number = request.POST.get('number','')
+        number=int(number)
+        search_name = BookInfo.objects.filter(bookname=bookname)
+        if search_name:
+            return HttpResponse('<script>alert("添加的图书已经存在");location.href="/add_book/"</script>')
+        else:
+            print '11111'
+            booktype=BookType.objects.get(typename=type)
+            bookcase=Bookcase.objects.get(name=case)
+            bookpub=Publishing.objects.get(name=pub)
+            BookInfo.objects.create(barcode=barcode, bookname=bookname, author=author, price=price, number=number,
+                                    bookpub=bookpub, booktype=booktype, bookcase=bookcase)
+            return HttpResponse('<script>alert("添加成功");location.href="/add_book/"</script>')

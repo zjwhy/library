@@ -30,6 +30,10 @@ urlpatterns=[
     #图书类型修改
     url(r'^up_type/$',views.up_type_view),
     #删除图书类型
-    url(r'^del_type/$',views.del_type_view)
+    url(r'^del_type/$',views.del_type_view),
+    #图书档案管理
+    url(r'^book/$',views.book_view),
+    #添加图书
+    url(r'^add_book/$',views.add_book_view)
 
 ]
