@@ -36,6 +36,30 @@ urlpatterns=[
     #添加图书
     url(r'^add_book/$',views.add_book_view),
     #修改图书
-    url(r'^up_book/$',views.up_book_view)
+    url(r'^up_book/$',views.up_book_view),
+
+
+
+
+    #图书借阅
+    url(r'^borrow/$',views.borrow_view),
+
+    #图书续借
+    url(r'^renew/$',views.renew_view),
+
+    #图书归还
+    url(r'^book_back/$',views.book_back_view),
+
+    # 更改口令
+    url(r'^pwd_modify/$', views.pwd_modify_view),
+
+    # 系统查询
+    # 图书信息查询
+    url(r'^book_info_search/$', views.book_info_search_view),
+    # 图书借阅查询
+    url(r'^borrow_search/$', views.borrow_search_view),
+    # 借阅到期提醒
+    url(r'^borrow_remind/$', views.borrow_remind_view),
+
 
 ]
