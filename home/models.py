@@ -6,7 +6,7 @@ from django.db import models
 # 书架
 class Bookcase(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
-    name = models.CharField(max_length=30, blank=True, null=True)
+    name = models.CharField(max_length=30,unique=True, blank=True, null=True)
     # column_3 = models.CharField(db_column='Column_3', max_length=10, blank=True, null=True)  # Field name made lowercase.
     class Meta:
         db_table = 't_bookcase'
@@ -39,7 +39,8 @@ class BookInfo(models.Model):
     # isbn = models.CharField(db_column='ISBN', max_length=20, blank=True, null=True)  # Field name made lowercase.
     price = models.FloatField(blank=True, null=True,verbose_name='价格')
     # page = models.IntegerField(blank=True, null=True,verbose_name='书页')
-    bookcase = models.IntegerField(blank=True, null=True,verbose_name='书架')
+    bookcase = models.ForeignKey(Bookcase,on_delete=models.CASCADE)
+    bookpub = models.ForeignKey(Publishing,on_delete=models.CASCADE)
     # intime = models.DateField(db_column='inTime', blank=True, null=True,verbose_name='馆藏日期')  # Field name made lowercase.
     # operator = models.CharField(max_length=30, blank=True, null=True,verbose_name='操作者')
     # del_field = models.IntegerField(db_column='del', blank=True, null=True,verbose_name='撤管时间')  # Field renamed because it was a Python reserved word.
@@ -104,7 +105,7 @@ class Reader(models.Model):
 class Manager(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     name = models.CharField(max_length=30, blank=True, null=True)
-    pwd = models.CharField(db_column='PWD', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    pwd = models.CharField(db_column='PWD', max_length=30, blank=True, null=False)  # Field name made lowercase.
 
     class Meta:
         db_table = 't_manager'

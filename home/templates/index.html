@@ -1,4 +1,52 @@
 {% extends 'base.html' %}
 {% block main_page %}
-    <p>啊啊啊</p>
+    <div class="container">
+        <h3><i class="iconfont">&#xe6e4;</i>图书借阅排行榜</h3>
+        <table class="table table-bordered">
+
+            <tr class="text-center" bgcolor="#d3d3d3">
+                <th>排名</th>
+                <th>图书条形码</th>
+                <th>图书名称</th>
+                <th>图书类型</th>
+                <th>书架</th>
+                <th>出版社</th>
+                <th>作者</th>
+                <th>定价</th>
+                <th>借阅次数</th>
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ book.barcode }}</td>
+                    <td>{{ book.bookname }}</td>
+                    <td>{{ book.booktype.typename }}</td>
+                    <td>{{ book.bookcase.name }}</td>
+                    <td>{{ book.bookpub.name }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.price }}</td>
+                    <td>{{ book.count }}</td>
+                </tr>
+            {% endfor %}
+
+            {% if not books %}
+                <tr>
+                    <td>1</td>
+                    <td>123222336</td>
+                    <td>javaScript的成神之路</td>
+                    <td>计算机类</td>
+                    <td>A架</td>
+                    <td>新华出版社</td>
+                    <td>詹生松</td>
+                    <td>400.0</td>
+                    <td>10000</td>
+                </tr>
+            {% endif %}
+
+        </table>
+        <div class="wrap">
+            <ul id="page"></ul>
+        </div>
+
+    </div>
 {% endblock %}
