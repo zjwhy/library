@@ -20,4 +20,14 @@ urlpatterns=[
     #添加书架
     url(r'^add_case/$',views.add_case_view),
 
+
+    # 系统查询
+    # 图书信息查询
+    url(r'^book_info_search/$',views.book_info_search_view),
+    # 图书借阅查询
+    url(r'^borrow_search/$',views.borrow_search_view),
+    # 借阅到期提醒
+    url(r'^borrow_remind/$',views.borrow_remind_view),
+    # 更改口令
+
 ]
