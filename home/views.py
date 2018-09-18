@@ -147,16 +147,16 @@ def add_case_view(request):
             return render(request,'no_add.html')
         else:
             Bookcase.objects.create(name=add_name)
-            return render(request,'add.html')
+            return redirect('/bookcase/')
 
 #修改书架
 def up_case_view(request):
     if request.method == 'GET':
         id = request.GET.get('id','')
-        print id
+        # print id
         up_case = Bookcase.objects.get(id=id)
         # for i in up_case:
-        print up_case.name
+        # print up_case.name
         return render(request, 'up_case.html',{'up_case':up_case})
     else:
         # print '111111'
@@ -184,11 +184,50 @@ def del_case_view(request):
             return redirect('/bookcase/')
 
 
-        # print del_case.name
-        # del_case[0].delete()
-        # for i in up_case:
-        # print up_case.name
 
+#图书类型管理
+def booktype_view(request):
+    con_type = BookType.objects.all()
+    return render(request,'book_type.html',{'con_type':con_type})
 
+#图书类型添加
+def add_booktype_view(request):
+    if request.method == 'GET':
+        return render(request,'add_booktype.html')
+    else:
+        name = request.POST.get('add_name','')
+        day = request.POST.get('add_day','')
+        search_name = BookType.objects.filter(typename=name)
+        if search_name:
+            return HttpResponse('<script>alert("添加的类型已经存在");location.href="/booktype/"</script>')
+        else:
+            BookType.objects.create(typename=name,days=day)
+            return redirect('/booktype/')
 
+#修改类型
+def up_type_view(request):
+    if request.method=='GET':
+        id = request.GET.get('id', '')
+        return render(request,'up_type.html',{'id':id})
+    else:
+        id = request.GET.get('id','')
+        id = int(id)
+        up_name = request.POST.get('up_name','')
+        up_days = request.POST.get('up_days','')
+        search_name = BookType.objects.filter(typename=up_name)
+        if search_name:
+            return HttpResponse('<script>alert("输入的类型已经存在");location.href="/booktype/"</script>')
+        else:
+            BookType.objects.filter(id=id).update(typename=up_name,days=up_days)
+            return HttpResponse('<script>alert("修改成功");location.href="/booktype/"</script>')
 
+#删除图书类型
+def del_type_view(request):
+        id = request.GET.get('id', '')
+        id = int(id)
+        search_name = BookType.objects.get(id=id).bookinfo_set.all()
+        if search_name:
+            return HttpResponse('<script>alert("请清空当前类型的书籍在做删除");location.href="/booktype/"</script>')
+        else:
+            BookType.objects.filter(id=id).delete()
+            return HttpResponse('<script>alert("删除成功");location.href="/booktype/"</script>')

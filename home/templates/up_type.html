@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block main_page %}
+        <div class="wrap">
+            <p class="manage_tool"><a href="/booktype/">返回图书类型展示页面</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                    <form action="/up_type/?id={{ id }}" method="post">
+                        {% csrf_token %}
+                        <tr>
+                            <td style="padding:5px;">修改类型<input type="text" name="up_name"></td>
+                        </tr>
+                         <tr>
+                            <td style="padding:5px;">可借天数<input type="text" name="up_days"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;"><input type="submit" value="提交"></td>
+                        </tr>
+                    </form>
+                </tbody>
+
+            </table>
+        </div>
+{% endblock %}

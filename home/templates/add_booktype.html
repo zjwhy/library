@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block main_page %}
+   <div class="wrap">
+            <p class="manage_tool"><a href="/booktype/">图书类型展示</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                    <form action="/add_booktype/" method="post">
+                        {% csrf_token %}
+                        <tr>
+                            <td style="padding:5px;">类型名称<input type="text" name="add_name"></td>
+                        </tr>
+                         <tr>
+                            <td style="padding:5px;">可借天数<input type="text" name="add_day"></td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:5px;"><input type="submit" value="提交"></td>
+                        </tr>
+                    </form>
+                </tbody>
+
+            </table>
+        </div>
+{% endblock %}

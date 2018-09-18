@@ -22,6 +22,14 @@ urlpatterns=[
     #修改书架
     url(r'^up_case/$',views.up_case_view),
     #删除书架
-    url(r'^del_case/$',views.del_case_view)
+    url(r'^del_case/$',views.del_case_view),
+    #图书类型管理
+    url(r'^booktype/$',views.booktype_view),
+    #图书类型添加
+    url(r'^add_booktype/$',views.add_booktype_view),
+    #图书类型修改
+    url(r'^up_type/$',views.up_type_view),
+    #删除图书类型
+    url(r'^del_type/$',views.del_type_view)
 
 ]
