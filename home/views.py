@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 
@@ -120,7 +120,35 @@ def add_case_view(request):
 
 # 读者类型
 def reader_type(request):
-    if request.method == "GET":
-    # number 可借数  name读者类型
+    reader_types = ReaderType.objects.all()
+    # print reader_types
+    return render(request,'reader_type.html',{"reader_types": reader_types})
+    # if request.method == "GET":
+    # # number 可借数  name读者类型
+    #     return render(request, "reader_type.html")
+    # else:
+    #     number = request.POST.get("number","")
+    #     name = request.POST.get('name', '')
+    #
+    #     if number and name:
+    #         return render(request,"reader_type.html")
+    #     else:
+    #         ReaderType = ReaderType(number=number,name=name).save()
+    #         return render(request,"reader_type.html",{"ReaderType": ReaderType})
 
-        return render(request,"read_type.html")
+
+def reader_view(request):
+    # name 读者姓名，barcode 条形码，created 创建日期
+    if request.method == "GET":
+        barcode = request.GET.get("barcode","")
+        name = request.GET.get("name","")
+        return render(request,"reader.html",{"barcode": barcode,"name": name})
+
+
+        readers = []
+        try:
+            reader = Reader.objects.get(barcode=barcode,name=name)
+        except Reader.DoesNotExist:
+            reader = Reader.objects.create(barcode=barcode,name=name)
+            readers.append(reader)
+        return render(request,"reader.html")

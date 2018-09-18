@@ -19,6 +19,8 @@ urlpatterns=[
     url(r'^bookcase/$',views.bookcase_view),
     #读者类型
     url(r'^reader_type/$', views.reader_type),
+    # 读者信息
+    url(r'^reader/$', views.reader_view),
     #添加书架
     url(r'^add_case/$',views.add_case_view),
 

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block main_page %}
+<div class="container">
+        <h3><i class="iconfont">&#xe78f;</i>读者类型管理</h3>
+        <div class="wrap">
+            <p class="manage_tool"><a href="">添加读者类型信息</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                <tr align="center" bgcolor="#d3d3d3">
+                    <th width="40%">读者类型名称</th>
+                    <th width="30%">可借数量</th>
+                    <th width="16%">修改</th>
+                    <th width="14%">删除</th>
+                </tr>
+                {% for reader_type in reader_types %}
+
+                <tr>
+                    <td>{{ reader_type.name }}</td>
+                    <td>{{ reader_type.number }}</td>
+                    <td align="center"><a href="#">修改</a></td>
+                    <td align="center"><a href="">删除</a></td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
