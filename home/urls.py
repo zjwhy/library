@@ -3,6 +3,9 @@ from django.conf.urls import url
 
 from home import views
 
+
+
+
 urlpatterns=[
     url(r'^login/',views.login_view),
     url(r'^register/',views.register_view),
@@ -19,5 +22,22 @@ urlpatterns=[
     url(r'^bookcase/$',views.bookcase_view),
     #添加书架
     url(r'^add_case/$',views.add_case_view),
+
+
+
+    #图书借阅
+    url(r'^borrow/$',views.borrow_view),
+
+    #图书续借
+    url(r'^renew/$',views.renew_view),
+
+    #图书归还
+    url(r'^book_back/$',views.book_back_view),
+
+    #更改口令
+    url(r'^pwd_modify/$',views.pwd_modify_view),
+
+
+
 
 ]
