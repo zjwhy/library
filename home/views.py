@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 
@@ -25,10 +26,10 @@ def modify_view(request):
         introduce = request.POST.get("introduce", "")
         if Library.objects.first():
             Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate, introduce=introduce)
+                                   createdate=createDate, introduce=introduce)
         else:
             Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   create_date=createDate,introduce=introduce)
+                                   createdate=createDate,introduce=introduce)
         # print '执行到这'
         con = Library.objects.first()
         return render(request, 'modify.html',{"con":con})
@@ -54,9 +55,25 @@ def bookcase_view(request):
 
     return render(request, 'bookcase.html')
 
+# 分页
+def page(num=1):
+    size = 1
+    paginator = Paginator(BookInfo.objects.all().order_by('-count'),size)
+    if num <= 0:
+        num = 1
+    if num > paginator.num_pages:
+        num = paginator.num_pages
+    current_page = num
+    total_page = paginator.num_pages
+    page_list = [current_page,total_page]
+    return paginator.page(num), page_list
 
-def home_view(request):
-    return HttpResponse('123')
+# 主页
+def home_view(request,num=1):
+    # num = request.GET.get('num','1')
+    num = int(num)
+    books,page_list = page(num)
+    return render(request,'index.html',{'books':books,'page_list':page_list})
 
 def login_view(request):
     if request.method=='GET':
@@ -65,7 +82,7 @@ def login_view(request):
         #接受数据
         name = request.POST.get('name','')
         pwd = request.POST.get('password','')
-        # print name,password
+        print name,pwd
 
         #判断是否登录成功
 
@@ -76,7 +93,6 @@ def login_view(request):
 
         else:
             return redirect('/login/')
-
 
 
 def register_view(request):
@@ -96,7 +112,7 @@ def register_view(request):
 
         # manageInfo = Manager.objects.create(manage=manage)
 
-        return HttpResponse('注册成功')
+        return redirect('/login/')
 
 
 
