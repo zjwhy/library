@@ -53,10 +53,12 @@ def parameter_view(request):
         return render(request, 'parameter_c.html',{'con':con})
     else:
         cost = request.POST.get('cost','')
+        # print cost
         validity = request.POST.get('validity','')
-        new_con = Parameter.objects.filter(cost=cost,validity=validity)
+        # print validity
+        new_con = Parameter.objects.first()
         if new_con:
-            Parameter.objects.filter(cost=cost,validity=validity).update(cost=cost,validity=validity)
+            Parameter.objects.filter(id=1).update(cost=cost,validity=validity)
             con = Parameter.objects.first()
             return render(request, 'parameter_c.html',{'con':con})
         else:
@@ -179,7 +181,7 @@ def del_case_view(request):
             return render(request, 'del_case.html',{"no_ok":'请先清空书架上的书籍在删除'} )
         else:
             Bookcase.objects.filter(id=id).delete()
-            return render(request, 'del_case.html', {'no_ok': '删除成功'})
+            return redirect('/bookcase/')
 
 
         # print del_case.name
