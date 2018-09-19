@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import date,datetime,timedelta
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -24,16 +25,20 @@ def modify_view(request):
         url = request.POST.get("url", "")
         createDate = request.POST.get("createDate", "")
         introduce = request.POST.get("introduce", "")
-        if Library.objects.first():
-            Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   createdate=createDate, introduce=introduce)
-        else:
-            Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   createdate=createDate,introduce=introduce)
+        try:
+            if Library.objects.first():
+                Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
+                                       createdate=createDate, introduce=introduce)
+            else:
+                Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
+                                       createdate=createDate,introduce=introduce)
+            return HttpResponse('<script>alert("修改成功");location.href="/modify/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("填写内容有误请重新填写");location.href="/modify/"</script>')
         # print '执行到这'
         # con = Library.objects.first()
         # return render(request, 'modify.html',{"con":con})
-        return HttpResponse('<script>alert("修改成功");location.href="/modify/"</script>')
+
 
 
 def index_view(request):
@@ -62,15 +67,15 @@ def parameter_view(request):
         validity = request.POST.get('validity','')
         # print validity
         new_con = Parameter.objects.first()
-        if new_con:
-            Parameter.objects.filter(id=1).update(cost=cost,validity=validity)
-            con = Parameter.objects.first()
-            return render(request, 'parameter_c.html',{'con':con})
-        else:
-            Parameter.objects.create(cost=cost,validity=validity)
-            con = Parameter.objects.first()
-            return render(request, 'parameter_c.html',{'con':con})
-
+        try:
+            if new_con:
+                Parameter.objects.filter(id=1).update(cost=cost,validity=validity)
+                return HttpResponse('<script>alert("保存成功");location.href="/parameter"</script>')
+            else:
+                Parameter.objects.create(cost=cost,validity=validity)
+                return HttpResponse('<script>alert("保存成功");location.href="/parameter"</script>')
+        except Exception:
+                return HttpResponse('<script>alert("填写的类型有误请重写");location.href="/parameter"</script>')
 # 书架设置
 def bookcase_view(request):
     bookcase = Bookcase.objects.all()
@@ -241,12 +246,15 @@ def add_booktype_view(request):
         name = request.POST.get('add_name','')
         day = request.POST.get('add_day','')
         search_name = BookType.objects.filter(typename=name)
-        if search_name:
-            return HttpResponse('<script>alert("添加的类型已经存在");location.href="/booktype/"</script>')
-        else:
-            BookType.objects.create(typename=name,days=day)
-            return HttpResponse('<script>alert("添加成功");location.href="/booktype/"</script>')
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("添加的类型已经存在");location.href="/booktype/"</script>')
 
+            else:
+                BookType.objects.create(typename=name,days=day)
+                return HttpResponse('<script>alert("添加成功");location.href="/booktype/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("输入的类型有误请重新添加");location.href="/add_booktype/"</script>')
 #修改类型
 def up_type_view(request):
     if request.method=='GET':
@@ -258,12 +266,14 @@ def up_type_view(request):
         up_name = request.POST.get('up_name','')
         up_days = request.POST.get('up_days','')
         search_name = BookType.objects.filter(typename=up_name)
-        if search_name:
-            return HttpResponse('<script>alert("输入的类型已经存在");location.href="/booktype/"</script>')
-        else:
-            BookType.objects.filter(id=id).update(typename=up_name,days=up_days)
-            return HttpResponse('<script>alert("修改成功");location.href="/booktype/"</script>')
-
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("输入的类型已经存在");location.href="/booktype/"</script>')
+            else:
+                BookType.objects.filter(id=id).update(typename=up_name,days=up_days)
+                return HttpResponse('<script>alert("修改成功");location.href="/booktype/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("修改的类型有误请重新修改");location.href="/booktype/"</script>')
 #删除图书类型
 def del_type_view(request):
         id = request.GET.get('id', '')
@@ -293,24 +303,25 @@ def add_book_view(request):
         author = request.POST.get('author','')
         price = request.POST.get('price','')
         number = request.POST.get('number','')
-        number=int(number)
         type = request.POST.get('type','')
         case = request.POST.get('case','')
         pub = request.POST.get('pub','')
         search_name = BookInfo.objects.filter(bookname=bookname)
-        if search_name:
-            return HttpResponse('<script>alert("添加的图书已经存在");location.href="/add_book/"</script>')
-        else:
-            booktype=BookType.objects.get(typename=type)
-            bookcase=Bookcase.objects.get(name=case)
-            bookpub=Publishing.objects.get(name=pub)
-            # for i in lista:
-            #     print i
-            # BookInfo.objects.create(bookpub=bookpub, booktype=booktype, bookcase=bookcase,**lista)
-            BookInfo.objects.create(barcode=barcode, bookname=bookname, author=author, price=price, number=number,
-                                    bookpub=bookpub, booktype=booktype, bookcase=bookcase)
-            return HttpResponse('<script>alert("添加成功");location.href="/add_book/"</script>')
-
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("添加的图书已经存在");location.href="/add_book/"</script>')
+            else:
+                booktype=BookType.objects.get(typename=type)
+                bookcase=Bookcase.objects.get(name=case)
+                bookpub=Publishing.objects.get(name=pub)
+                # for i in lista:
+                #     print i
+                # BookInfo.objects.create(bookpub=bookpub, booktype=booktype, bookcase=bookcase,**lista)
+                BookInfo.objects.create(barcode=barcode, bookname=bookname, author=author, price=price, number=number,
+                                        bookpub=bookpub, booktype=booktype, bookcase=bookcase)
+                return HttpResponse('<script>alert("添加成功");location.href="/add_book/"</script>')
+        except:
+            return HttpResponse('<script>alert("添加的类型有误请重新添加");location.href="/add_book/"</script>')
 #修改图书
 def up_book_view(request):
     if request.method=='GET':
@@ -330,18 +341,19 @@ def up_book_view(request):
         case = request.POST.get('case', '')
         pub = request.POST.get('pub', '')
         number = request.POST.get('number', '')
-        number = int(number)
         search_name = BookInfo.objects.filter(bookname=bookname)
-        if search_name:
-            return HttpResponse('<script>alert("修改的图书已经存在");location.href="/book/"</script>')
-        else:
-            booktype = BookType.objects.get(typename=type)
-            bookcase = Bookcase.objects.get(name=case)
-            bookpub = Publishing.objects.get(name=pub)
-            BookInfo.objects.filter(id=id).update(barcode=barcode, bookname=bookname, author=author, price=price,
-                                                  number=number,bookpub=bookpub,booktype=booktype, bookcase=bookcase)
-            return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
-
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("修改的图书已经存在");location.href="/book/"</script>')
+            else:
+                booktype = BookType.objects.get(typename=type)
+                bookcase = Bookcase.objects.get(name=case)
+                bookpub = Publishing.objects.get(name=pub)
+                BookInfo.objects.filter(id=id).update(barcode=barcode, bookname=bookname, author=author, price=price,
+                                                      number=number,bookpub=bookpub,booktype=booktype, bookcase=bookcase)
+                return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("修改的类型有误请重新修改");location.href="/book/"</script>')
 #删除图书
 def del_book_view(request):
     id = request.GET.get('id','')
@@ -373,8 +385,32 @@ def borrow_view(request):
 
 #图书续借
 def renew_view(request):
-    return render(request,'renew.html')
-
+    if request.method=='GET':
+        up = request.GET.get('up','')
+        # print up
+        if up:
+            search_id = Borrow.objects.get(id=up)
+            days = search_id.book.booktype.days
+            new_backtime = search_id.backtime+timedelta(days=days)
+            search_id.backtime=new_backtime
+            search_id.save()
+            new_all = Borrow.objects.all()
+            search_rid = search_id.reader.id
+            search_all = Reader.objects.get(id=search_rid)
+            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all})
+        else:
+            return render(request, 'renew.html')
+    else:
+        code = request.POST.get('readercode','')
+        try:
+            search_code = Reader.objects.get(barcode=code)
+            if search_code:
+                b_all = search_code.borrow_set.all()
+                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all})
+            else:
+                return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
+        except:
+            return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
 #图书归还
 def book_back_view(request):
     return render(request,'book_back.html')

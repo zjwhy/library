@@ -3,10 +3,9 @@
     <div class="container">
         <div class="wrap">
             <p class="manage_tool"><a href="/book/">图书档案展示</a></p>
-            <form action="/up_book/?id={{ id }}" method="post" onsubmit="return checkAll();">
+            <form action="/add_book/" method="post" onsubmit="return checkAll();">
                 <table class="table table-bordered">
                     <tbody>
-
                     {% csrf_token %}
                     <tr>
                         <td style="padding:5px;">条形码<input type="text" name="barcode" value=""
@@ -63,7 +62,7 @@
                         ><span id="numberSpan"></span></td>
                     </tr>
                     <tr>
-                        <td style="padding:5px;"><input type="submit" value="修改" ></td>
+                        <td style="padding:5px;"><input type="submit" value="添加" ></td>
                     </tr>
 
                     </tbody>

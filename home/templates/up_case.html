@@ -5,10 +5,11 @@
             <p class="manage_tool"><a href="/bookcase/">返回书架展示页面</a></p>
             <table class="table table-bordered">
                 <tbody>
-                    <form action="/up_case/?id={{ up_case.id }}" method="post">
+                    <form action="/up_case/?id={{ up_case.id }}" method="post" onsubmit="return checkAll()">
                         {% csrf_token %}
                         <tr>
-                            <td style="padding:5px;">修改名<input type="text" name="up_name"></td>
+                            <td style="padding:5px;">修改名<input type="text" name="up_name" id="up_name"
+                            onblur="checkUp(this.value)"><span id="up_nameSpan"></span></td>
                         </tr>
                         <tr>
                             <td style="padding:5px;"><input type="submit" value="提交"></td>
@@ -19,4 +20,17 @@
             </table>
         </div>
     </div>
+    <script>
+        function checkUp(up_name){
+            var _up_name = up_name.trim()
+            if(_up_name.length==0){
+                $('#up_nameSpan').html('不能为空');
+                return false
+            }
+            return true
+        }
+        function checkAll() {
+            return checkUp($('#up_name').val())
+        }
+    </script>
 {% endblock %}
