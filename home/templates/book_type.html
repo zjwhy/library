@@ -17,7 +17,7 @@
                         <td align="center">{{ con.typename }}</td>
                         <td align="center">{{ con.days }}</td>
                         <td align="center"><a href="/up_type/?id={{ con.id }}">修改</a></td>
-                        <td align="center"><a href="/del_type/?id={{ con.id }}">删除</a></td>
+                        <td align="center"><a href="javascript:void(0)" onclick="delBookById({{ con.id }})">删除</a></td>
                     </tr>
                 {% endfor %}
 
@@ -27,4 +27,15 @@
         </div>
 
     </div>
+    <script>
+        function delBookById(bid){
+            var flag = confirm('您确定要删除当前记录吗？');
+            if(flag){
+                location.href='/del_type/?id='+bid;
+            }else{
+                location.href='/booktype/';
+            }
+        }
+
+    </script>
 {% endblock %}

@@ -13,6 +13,8 @@ urlpatterns=[
     url(r'^modify/$',views.modify_view),
     #管理员设置
     url(r'^manager/$',views.manager_view),
+    #删除管理员
+    url(r'^del_manager/$',views.del_manager_view),
     #参数设置
     url(r'^parameter/$',views.parameter_view),
     #书架设置

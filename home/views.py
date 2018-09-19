@@ -31,8 +31,9 @@ def modify_view(request):
             Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
                                    createdate=createDate,introduce=introduce)
         # print '执行到这'
-        con = Library.objects.first()
-        return render(request, 'modify.html',{"con":con})
+        # con = Library.objects.first()
+        # return render(request, 'modify.html',{"con":con})
+        return HttpResponse('<script>alert("修改成功");location.href="/modify/"</script>')
 
 
 def index_view(request):
@@ -43,7 +44,11 @@ def index_view(request):
 def manager_view(request):
     managers = Manager.objects.all()
     return render(request, 'manager.html',{"managers":managers})
-
+#删除管理员
+def del_manager_view(request):
+    id = request.GET.get('id','')
+    Manager.objects.filter(id=id).delete()
+    return HttpResponse('<script>alert("删除成功");location.href="/manager/"</script>')
 
 # 参数设置
 def parameter_view(request):
@@ -153,10 +158,10 @@ def add_case_view(request):
         add_name = request.POST.get('add_name','')
         search_name = Bookcase.objects.filter(name=add_name)
         if search_name:
-            return render(request,'no_add.html')
+            return HttpResponse('<script>alert("添加的书架已经存在");location.href="/bookcase/"</script>')
         else:
             Bookcase.objects.create(name=add_name)
-            return redirect('/bookcase/')
+            return HttpResponse('<script>alert("添加成功");location.href="/bookcase/"</script>')
 
 # 图书字段查询函数封装
 def select(select,search):
@@ -204,10 +209,10 @@ def up_case_view(request):
         up_name = request.POST.get('up_name','')
         seach_name = Bookcase.objects.filter(name=up_name)
         if seach_name:
-            return render(request,'up_ok.html',{'no_ok':'修改的名字已经存在'})
+            return HttpResponse('<script>alert("修改的书架名已经存在");location.href="/bookcase/"</script>')
         else:
             Bookcase.objects.filter(id=nid).update(name=up_name)
-            return render(request,'up_ok.html',{'no_ok':'修改成功'})
+            return HttpResponse('<script>alert("修改成功");location.href="/bookcase/"</script>')
 
 #删除书架
 def del_case_view(request):
@@ -216,10 +221,10 @@ def del_case_view(request):
         id=int(id)
         all_book = Bookcase.objects.get(id=id).bookinfo_set.all()
         if all_book:
-            return render(request, 'del_case.html',{"no_ok":'请先清空书架上的书籍在删除'} )
+            return HttpResponse('<script>alert("请先清空书架在做删除");location.href="/bookcase/"</script>')
         else:
             Bookcase.objects.filter(id=id).delete()
-            return redirect('/bookcase/')
+            return HttpResponse('<script>alert("删除成功");location.href="/bookcase/"</script>')
 
 
 
@@ -240,7 +245,7 @@ def add_booktype_view(request):
             return HttpResponse('<script>alert("添加的类型已经存在");location.href="/booktype/"</script>')
         else:
             BookType.objects.create(typename=name,days=day)
-            return redirect('/booktype/')
+            return HttpResponse('<script>alert("添加成功");location.href="/booktype/"</script>')
 
 #修改类型
 def up_type_view(request):

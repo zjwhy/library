@@ -17,7 +17,7 @@
                     <td style="padding:5px;">{{ bc.name }}</td>
                     <td align="center"><a href="/up_case/?id={{ bc.id }}">修改</a>
                     </td>
-                    <td align="center"><a href="/del_case/?id={{ bc.id }}">删除</a></td>
+                    <td align="center"><a href="javascript:void(0)" onclick="delBookById({{ bc.id }})">删除</a></td>
                 </tr>
             {% endfor %}
 
@@ -27,4 +27,15 @@
         </div>
 
     </div>
+    <script>
+        function delBookById(bid){
+            var flag = confirm('您确定要删除当前记录吗？');
+            if(flag){
+                location.href='/del_case/?id='+bid;
+            }else{
+                location.href='/bookcase/';
+            }
+        }
+
+    </script>
 {% endblock %}
