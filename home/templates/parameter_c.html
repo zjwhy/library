@@ -1,57 +1,22 @@
 {% extends 'base.html' %}
 {% block main_page %}
-    {% if con %}
-        <div class="container">
-            <h3><i class="iconfont">&#xe76d;</i>参数设置</h3>
-            <div class="wrap">
-                <form name="form1" action="" method="post">
-                    {% csrf_token %}
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td align="left">办证费：</td>
-                            <td align="left">
-                                <input name="cost" type="text" id="cost" value="{{ con.cost }}" size="30">
-                                (元)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left" style="padding:5px;">有效期限：</td>
-                            <td align="left"><input name="validity" type="text" id="validity" size="30" value="{{ con.validity }}">
-                                (月)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td height="65" align="left" style="padding:5px;">&nbsp;</td>
-                            <td><input name="Submit" type="submit" class="btn_grey" value="保存">
-                                &nbsp;
-                                <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    {% else %}
-          <div class="container">
+    <div class="container">
         <h3><i class="iconfont">&#xe76d;</i>参数设置</h3>
         <div class="wrap">
-            <form name="form1" action="" method="post">
+            <form name="form1" action="" method="post" onsubmit="return checkAll()">
                 {% csrf_token %}
                 <table>
                     <tbody>
                     <tr>
                         <td align="left">办证费：</td>
                         <td align="left">
-                            <input name="cost" type="text" id="cost" value="45" size="30">
-                            (元)
-                        </td>
+                            <input name="cost" type="text" id="cost" value="{{ con.cost }}" size="30"
+                            onblur="checkCost(this.value)">(元)<span id="costSpan"></span></td>
                     </tr>
                     <tr>
                         <td align="left" style="padding:5px;">有效期限：</td>
-                        <td align="left"><input name="validity" type="text" id="validity" size="30" value="3">
-                            (月)
-                        </td>
+                        <td align="left"><input name="validity" type="text" id="validity" size="30" value="{{ con.validity }}"
+                        onblur="checkValidity(this.value)">(月) <span id="validitySpan"></span></td>
                     </tr>
                     <tr>
                         <td height="65" align="left" style="padding:5px;">&nbsp;</td>
@@ -64,6 +29,28 @@
             </form>
         </div>
     </div>
-    {% endif %}
+    <script>
+        function checkCost(cost){
+            var _cost = cost.trim()
+            if(_cost.length==0){
+                $('#costSpan').html('不能为空');
+                return false
+            }
+            return true
+        }
+        function checkValidity(validity) {
+            var _validity = validity.trim()
+            if(_validity.length==0){
+                $('#validitySpan').html('不能为空')
+                return false
+            }
+            return true
+        }
+        function checkAll() {
+            var _cost = checkCost($('#cost').val());
+            var _validity = checkValidity($('#validity').val())
+            return _cost&&_validity;
+        }
+    </script>
 
 {% endblock %}

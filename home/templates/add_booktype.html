@@ -5,13 +5,15 @@
             <p class="manage_tool"><a href="/booktype/">图书类型展示</a></p>
             <table class="table table-bordered">
                 <tbody>
-                    <form action="/add_booktype/" method="post">
+                    <form action="/add_booktype/" method="post" onsubmit="return checkAll()">
                         {% csrf_token %}
                         <tr>
-                            <td style="padding:5px;">类型名称<input type="text" name="add_name"></td>
+                            <td style="padding:5px;">类型名称<input type="text" name="add_name" id="add"
+                            onblur="checkAdd(this.value)"><span id="addSpan"></span></td>
                         </tr>
                          <tr>
-                            <td style="padding:5px;">可借天数<input type="text" name="add_day"></td>
+                            <td style="padding:5px;">可借天数<input type="text" name="add_day" id="time"
+                            onblur="checkTime(this.value)"><span id="timeSpan"></span></td>
                         </tr>
 
                         <tr>
@@ -23,4 +25,25 @@
             </table>
         </div>
     </div>
+    <script>
+        function checkAdd(add){
+            var _add = add.trim()
+            if(_add.length==0){
+                $('#addSpan').html('不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkTime(time){
+            var _time = time.trim();
+            if(_time.length==0){
+                $('#timeSpan').html('不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkAll() {
+            return checkAdd($('#add').val())&&checkTime($('#time').val());
+        }
+    </script>
 {% endblock %}
