@@ -318,7 +318,8 @@ def up_book_view(request):
         all_type = BookType.objects.all()
         all_case = Bookcase.objects.all()
         all_pub = Publishing.objects.all()
-        return render(request,'up_book.html',{'id':id,'all_type': all_type, 'all_case': all_case, 'all_pub': all_pub})
+        up_con = BookInfo.objects.get(id=id)
+        return render(request,'up_book.html',{'id':id,'all_type': all_type, 'all_case': all_case, 'all_pub': all_pub,'up_con':up_con})
     else:
         id = request.GET.get('id','')
         barcode = request.POST.get('barcode', '')

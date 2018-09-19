@@ -1,70 +1,135 @@
 {% extends 'base.html' %}
 {% block main_page %}
-         <div class="container">
+    <div class="container">
         <div class="wrap">
             <p class="manage_tool"><a href="/book/">图书档案展示</a></p>
-     <form action="/up_book/?id={{ id }}" method="post">
-            <table class="table table-bordered">
-                <tbody>
+            <form action="/up_book/?id={{ id }}" method="post" onsubmit="return checkAll();">
+                <table class="table table-bordered">
+                    <tbody>
 
-                        {% csrf_token %}
-                         <tr>
-                            <td style="padding:5px;">条形码<input type="text" name="barcode"></td>
-                         </tr>
-                         <tr>
-                             <td style="padding:5px;">书&emsp;名<input type="text" name="bookname"></td>
-                        </tr>
- <tr>
-                             <td style="padding:5px;">作&emsp;者<input type="text" name="author"></td>
-                        </tr>
-                         <tr>
-                             <td style="padding:5px;">价&emsp;格<input type="text" name="price"></td>
-                        </tr>
-                         <tr>
-                             <td style="padding:5px;">类&emsp;型
+                    {% csrf_token %}
+                    <tr>
+                        <td style="padding:5px;">条形码<input type="text" name="barcode" value="{{ up_con.barcode }}"
+                                                           id="barcode" onblur="checkBarCode(this.value);"><span id="barcodeSpan"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">书&emsp;名<input type="text" name="bookname" value="{{ up_con.bookname }}" id="bookname"
+                        onblur="checkBookName(this.value);"><span id="nameSpan"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">作&emsp;者<input type="text" name="author" value="{{ up_con.author }}"
+                           onblur='checkAuthor(this.value)' id="bookauthor"><span id="authorSpan"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">价&emsp;格<input type="text" name="price" value="{{ up_con.price }}" onblur="checkPrice(this.value)" id="bookprice"
+                        ><span id="priceSpan"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">类&emsp;型
 
-                                 <select name="type" id="">
-                                     {% for type in all_type %}
-                                        <option value="{{ type.typename }}">{{ type.typename }}</option>
-                                     {% endfor %}
-                                 </select>
+                            <select name="type" id="">
+                                {% for type in all_type %}
+                                    <option value="{{ type.typename }}"
+                                            {% if type.typename == up_con.booktype.typename %}selected="selected"{% endif %}>{{ type.typename }}</option>
+                                {% endfor %}
+                            </select>
 
-                             </td>
-                        </tr>
-                         <tr>
-                             <td style="padding:5px;">书&emsp;架
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">书&emsp;架
 
-                                  <select name="case" id="">
-                                      {% for case in all_case %}
-                                        <option value="{{ case.name }}">{{ case.name }}</option>
-                                      {% endfor %}
-                                  </select>
+                            <select name="case" id="">
+                                {% for case in all_case %}
+                                    <option value="{{ case.name }}"
+                                            {% if case.name == up_con.bookcase.name %}selected="selected"{% endif %}>{{ case.name }}</option>
+                                {% endfor %}
+                            </select>
 
-                             </td>
-                        </tr>
+                        </td>
+                    </tr>
 
-                         <tr>
-                             <td style="padding:5px;">出版社
+                    <tr>
+                        <td style="padding:5px;">出版社
 
-                                <select name="pub" id="">
-                                    {% for pub in all_pub %}
-                                        <option value="{{ pub.name }}">{{ pub.name }}</option>
-                                    {% endfor %}
-                                </select>
+                            <select name="pub" id="">
+                                {% for pub in all_pub %}
+                                    <option value="{{ pub.name }}"
+                                            {% if pub.name == up_con.bookpub.name %}selected="selected"{% endif %}>{{ pub.name }}</option>
+                                {% endfor %}
+                            </select>
 
-                             </td>
-                        </tr>
-                         <tr>
-                             <td style="padding:5px;">馆藏数量<input type="text" name="number"></td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;"><input type="submit" value="修改"></td>
-                        </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">馆藏数量<input type="text" name="number" value="{{ up_con.number }}" onblur="checkNumber(this.value)" id="booknumber"
+                        ><span id="numberSpan"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;"><input type="submit" value="修改" ></td>
+                    </tr>
 
-                </tbody>
+                    </tbody>
 
-            </table>
-     </form>
+                </table>
+            </form>
         </div>
     </div>
+    <script>
+
+{#        判断为空不能条件function#}
+        function checkBarCode(barcode) {
+            var code = barcode.trim();
+            if(barcode.length==0){
+                $('#barcodeSpan').html('条形码不能为空！');
+                return false;
+            }
+
+            return true;
+        }
+
+
+        function checkBookName(bookname){
+            var name = bookname.trim();
+            if(name.length==0){
+                $('#nameSpan').html('书名不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkAuthor(bookauthor) {
+            var author = bookauthor.trim();
+            if(author.length==0){
+                $('#authorSpan').html('作者不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkPrice(bookprice) {
+            var price = bookprice.trim();
+            if(price.length==0){
+                $('#priceSpan').html('价格不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkNumber(booknumber) {
+            var number = booknumber.trim();
+            if(number.length==0){
+                $('#numberSpan').html('数量不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkAll() {
+            var code = checkBarCode($('#barcode').val());
+            var name = checkBookName($('#bookname').val());
+            var author = checkAuthor($('#bookauthor').val());
+            var price = checkPrice($('#bookprice').val());
+            var number = checkNumber($('#booknumber').val());
+            return code&&name&&author&&price&&number;
+
+        }
+
+    </script>
 {% endblock %}

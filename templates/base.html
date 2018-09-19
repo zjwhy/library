@@ -27,6 +27,9 @@
         </span>
     </div>
 </div>
+<script src="{% static '' %}jquery-1.12.3.min.js"></script>
+<script src="{% static '' %}bootstrap.min.js"></script>
+<script src="{% static '' %}bootstrap-paginator.js"></script>
 <div class="main_page">
     {% block main_page %}
         {#  下方div-container为挖洞页面，完成contain后请注释 #}
@@ -38,9 +41,7 @@
 <footer class="text-center">
     {% include 'footer.html' %}
 </footer>
-<script src="{% static '' %}jquery-1.12.3.min.js"></script>
-<script src="{% static '' %}bootstrap.min.js"></script>
-<script src="{% static '' %}bootstrap-paginator.js"></script>
+
 <script>
     $(function () {
         var currentPage = {{ page_list.0 }};
