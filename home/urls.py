@@ -20,6 +20,14 @@ urlpatterns=[
     url(r'^parameter/$',views.parameter_view),
     #书架设置
     url(r'^bookcase/$',views.bookcase_view),
+    #出版社设置
+    url(r'^pub/$',views.pub_view),
+    #添加出版社
+    url(r'^add_pub/$',views.add_pub_view),
+    #删除出版社
+    url(r'^del_pub/$',views.del_pub_view),
+    #修改出版社
+    url(r'^up_pub/$',views.up_pub_view),
     #读者类型
     url(r'^reader_type/(\d*)$', views.reader_type),
     # 读者档案信息

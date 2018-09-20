@@ -15,11 +15,11 @@ from .models import *
 def __set_session(request,name):
     request.session["username"] = name
     request.session["is_login"] = True
-    if request.POST.get("rmb", None) == "1":
-        # 设置超时时间
-        request.session.set_expiry(10)
+    # if request.POST.get("rmb", None) == "1":
+    #     # 设置超时时间
+    #     request.session.set_expiry(10)
     # 设置生效时间
-    request.session.set_expiry(10 * 60)
+    request.session.set_expiry(60 * 60*10)
 # 获取用户名session
 def get_userName(request):
     return request.session.get("username", None)
@@ -208,6 +208,50 @@ def add_case_view(request):
             Bookcase.objects.create(name=add_name)
             return HttpResponse('<script>alert("添加成功");location.href="/bookcase/"</script>')
 
+#出版社设置
+def pub_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    all_pub = Publishing.objects.all()
+    return render(request,'pub.html',{'all_pub':all_pub})
+#出版社添加
+def add_pub_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method=='GET':
+        return render(request,'add_pub.html')
+    else:
+        name = request.POST.get('add_name','')
+        search_name = Publishing.objects.filter(name=name)
+        if search_name:
+            return HttpResponse('<script>alert("添加的出版社已经存在");location.href="/pub/"</script>')
+        else:
+            Publishing.objects.create(name=name)
+            return HttpResponse('<script>alert("添加成功");location.href="/pub/"</script>')
+#删除出版社
+def del_pub_view(request):
+    id = request.GET.get('id','')
+    all_pub = Publishing.objects.get(id=id).bookinfo_set.all()
+    if all_pub:
+        return HttpResponse('<script>alert("请先将当前出版社书籍清空在做删除");location.href="/pub/"</script>')
+    else:
+        Publishing.objects.get(id=id).delete()
+        return HttpResponse('<script>alert("删除成功");location.href="/pub/"</script>')
+#修改出版社
+def up_pub_view(request):
+    if request.method=='GET':
+        id = request.GET.get('id','')
+        up_pub = Publishing.objects.get(id=id)
+        return render(request,'up_pub.html',{'up_pub':up_pub})
+    else:
+        id = request.GET.get('id','')
+        name = request.POST.get('up_name','')
+        search_up = Publishing.objects.filter(name=name)
+        if search_up:
+            return HttpResponse('<script>alert("修改的出版社名已经存在");location.href="/pub/"</script>')
+        else:
+            Publishing.objects.filter(id=id).update(name=name)
+            return HttpResponse('<script>alert("修改成功");location.href="/pub/"</script>')
 # 图书字段查询函数封装
 def selectAll(select,search):
     if select == 'barcode':
@@ -364,6 +408,7 @@ def book_view(request):
         return redirect('/login')
     all_book = BookInfo.objects.all()
     return render(request,'book.html',{'all_book':all_book})
+
 
 #图书添加功能
 def add_book_view(request):
