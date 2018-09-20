@@ -782,7 +782,15 @@ def add_reader(request):
     sys.setdefaultencoding('utf-8')
 
     if request.method == "GET":
-        return render(request, "add_readerinfo.html")
+        sex = Sex.objects.all()
+        if not sex:
+            Sex.objects.create(id=1,sex='男')
+            Sex.objects.create(id=2,sex='女')
+        reader_types = ReaderType.objects.all()
+        if not reader_types:
+            return HttpResponse("<script>alert('没有可选的读者类型，请添加');location:href='/add_reader_type/';</script>")
+        sexs = Sex.objects.all()
+        return render(request, "add_readerinfo.html",{'sexs':sexs,'reader_types':reader_types})
     else:
         add_name = request.POST.get("add_name", "")
         add_sex = request.POST.get("add_sex", "")
@@ -791,18 +799,19 @@ def add_reader(request):
         add_email = request.POST.get("add_email", "")
         add_created = request.POST.get("add_created", "")
         add_readertype = request.POST.get("add_readertype", "")
-
+        print add_barcode,add_name,add_created,add_email,add_sex,add_readertype,add_tel
         try:
             search_barcode = Reader.objects.filter(barcode=add_barcode)
         except:
             search_barcode = []
 
         if not search_barcode:
+
             try:
                 Reader.objects.create(name=add_name, sex_id=add_sex, barcode=add_barcode, tel=add_tel, email=add_email,
                                   created=add_created, readertype_id=add_readertype)
             except:
-                return render(request," not_bug.html")
+                pass
         return redirect("/reader/")
 
 
