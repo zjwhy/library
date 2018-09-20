@@ -15,9 +15,9 @@ from .models import *
 def __set_session(request,name):
     request.session["username"] = name
     request.session["is_login"] = True
-    if request.POST.get("rmb", None) == "1":
-        # 设置超时时间
-        request.session.set_expiry(10)
+    # if request.POST.get("rmb", None) == "1":
+    #     # 设置超时时间
+    #     request.session.set_expiry(10)
     # 设置生效时间
     request.session.set_expiry(1 * 60)
 # 获取用户名session
@@ -548,9 +548,9 @@ def renew_view(request):
             new_backtime = search_id.backtime+timedelta(days=days)
             search_id.backtime=new_backtime
             search_id.save()
-            new_all = Borrow.objects.all()
             search_rid = search_id.reader.id
             search_all = Reader.objects.get(id=search_rid)
+            new_all = Borrow.objects.filter(reader_id=search_rid).al()
             return render(request,'renew.html',{'search_code':search_all,'b_all':new_all})
         else:
             return render(request, 'renew.html')
