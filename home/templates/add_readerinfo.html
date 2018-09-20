@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block main_page %}
+    <div class="wrap">
+        <p class="manage_tool"><a href="/reader/">返回读者页面</a></p>
+        <table class="table table-bordered">
+            <tbody>
+            <form action="/add_readerinfo/" method="post">
+                {% csrf_token %}
+                <tr>
+                    <td style="padding:5px;">读者姓名:<input type="text" name="add_name"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">性&emsp;&emsp;别:<input type="text" name="add_sex"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">条形码&emsp;:<input type="text" name="add_barcode"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">电&emsp;&emsp;话:<input type="text" name="add_tel"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">邮&emsp;&emsp;箱:<input type="text" name="add_email"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">注册时间:<input type="text" name="add_created"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;">读者类型:<input type="text" name="add_readertype"></td>
+                </tr>
+                <tr>
+                    <td style="padding:5px;"><input type="submit" value="提交"></td>
+                </tr>
+            </form>
+            </tbody>
+
+        </table>
+    </div>
+{% endblock %}

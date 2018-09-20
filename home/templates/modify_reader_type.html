@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    {% if con %}
+        <div class="container">
+            <h3><i class="iconfont">&#xe615;</i>读者类型管理</h3>
+            <div class="wrap">
+                <form name="form1" action="/reader_type/{{ con.id }}" method="post">
+                    {% csrf_token %}
+                    <table>
+                        <tbody>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">读者类型名：</td>
+                            <td width="80%" align="left">
+                                <input name="name" type="text" value="{{ con.name }}" size="30">
+
+                            </td>
+                        </tr>
+
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">可借&emsp;数量：</td>
+                            <td width="80%" align="left">
+                                <input name="number" type="text" value="{{ con.number }}" size="30">
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="65" align="left" style="padding:5px;">&nbsp;</td>
+                            <td><input name="Submit" type="submit" class="btn_grey" value="保存"
+                                       onclick="return checkForm(form1)">
+                                &nbsp;
+                                <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock %}
