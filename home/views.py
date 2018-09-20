@@ -31,12 +31,15 @@ def get_session(request):
 # 退出系统，清除session
 def logout_view(request):
     # 删除用户session
-    request.session.clear()
+    # request.session.clear()
+    request.session.set_expiry(-1)
     # 注销
     return redirect("/login")
 
 # 系统设置
 def modify_view(request):
+    if not get_session(request):
+        return redirect('/login')
     if request.method == 'GET':
         con = Library.objects.first()
         return render(request, 'modify.html', {'con': con})
@@ -50,15 +53,20 @@ def modify_view(request):
         url = request.POST.get("url", "")
         createDate = request.POST.get("createDate", "")
         introduce = request.POST.get("introduce", "")
-        if Library.objects.first():
-            Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   createdate=createDate, introduce=introduce)
-        else:
-            Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
-                                   createdate=createDate,introduce=introduce)
+        try:
+            if Library.objects.first():
+                Library.objects.update(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
+                                       createdate=createDate, introduce=introduce)
+            else:
+                Library.objects.create(name=name, curator=curator, tel=tel, address=address, email=email, url=url,
+                                       createdate=createDate,introduce=introduce)
+            return HttpResponse('<script>alert("修改成功");location.href="/modify/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("填写内容有误请重新填写");location.href="/modify/"</script>')
         # print '执行到这'
-        con = Library.objects.first()
-        return render(request, 'modify.html',{"con":con})
+        # con = Library.objects.first()
+        # return render(request, 'modify.html',{"con":con})
+
 
 # 直接首页
 def index_view(request):
@@ -69,19 +77,47 @@ def index_view(request):
 
 # 管理员设置
 def manager_view(request):
+    if not get_session(request):
+        return redirect('/login')
     managers = Manager.objects.all()
     return render(request, 'manager.html',{"managers":managers})
-
+#删除管理员
+def del_manager_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    id = request.GET.get('id','')
+    Manager.objects.filter(id=id).delete()
+    return HttpResponse('<script>alert("删除成功");location.href="/manager/"</script>')
 
 # 参数设置
 def parameter_view(request):
-    return render(request, 'parameter_c.html')
-
-
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        con = Parameter.objects.first()
+        # print con
+        return render(request, 'parameter_c.html',{'con':con})
+    else:
+        cost = request.POST.get('cost','')
+        # print cost
+        validity = request.POST.get('validity','')
+        # print validity
+        new_con = Parameter.objects.first()
+        try:
+            if new_con:
+                Parameter.objects.filter(id=1).update(cost=cost,validity=validity)
+                return HttpResponse('<script>alert("保存成功");location.href="/parameter"</script>')
+            else:
+                Parameter.objects.create(cost=cost,validity=validity)
+                return HttpResponse('<script>alert("保存成功");location.href="/parameter"</script>')
+        except Exception:
+                return HttpResponse('<script>alert("填写的类型有误请重写");location.href="/parameter"</script>')
 # 书架设置
 def bookcase_view(request):
-
-    return render(request, 'bookcase.html')
+    if not get_session(request):
+        return redirect('/login')
+    bookcase = Bookcase.objects.all()
+    return render(request, 'bookcase.html',{'bookcase':bookcase})
 
 # 分页
 def __page(num=1):
@@ -167,10 +203,10 @@ def add_case_view(request):
         add_name = request.POST.get('add_name','')
         search_name = Bookcase.objects.filter(name=add_name)
         if search_name:
-            return render(request,'no_add.html')
+            return HttpResponse('<script>alert("添加的书架已经存在");location.href="/bookcase/"</script>')
         else:
             Bookcase.objects.create(name=add_name)
-            return render(request,'add.html')
+            return HttpResponse('<script>alert("添加成功");location.href="/bookcase/"</script>')
 
 # 图书字段查询函数封装
 def selectAll(select,search):
@@ -221,6 +257,192 @@ def borrowAll(timeFrom,timeTo):
         except ValidationError:
             borrow = Borrow.objects.filter(borrowtime__lte=timeTo)
     return borrow
+
+#修改书架
+def up_case_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        id = request.GET.get('id','')
+        # print id
+        up_case = Bookcase.objects.get(id=id)
+        # for i in up_case:
+        # print up_case.name
+        return render(request, 'up_case.html',{'up_case':up_case})
+    else:
+        # print '111111'
+        nid = request.GET.get('id','')
+        # print nid
+        nid = int(nid)
+        up_name = request.POST.get('up_name','')
+        seach_name = Bookcase.objects.filter(name=up_name)
+        if seach_name:
+            return HttpResponse('<script>alert("修改的书架名已经存在");location.href="/bookcase/"</script>')
+        else:
+            Bookcase.objects.filter(id=nid).update(name=up_name)
+            return HttpResponse('<script>alert("修改成功");location.href="/bookcase/"</script>')
+
+#删除书架
+def del_case_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    id = request.GET.get('id','')
+    print id
+    id=int(id)
+    all_book = Bookcase.objects.get(id=id).bookinfo_set.all()
+    if all_book:
+        return HttpResponse('<script>alert("请先清空书架在做删除");location.href="/bookcase/"</script>')
+    else:
+        Bookcase.objects.filter(id=id).delete()
+        return HttpResponse('<script>alert("删除成功");location.href="/bookcase/"</script>')
+
+
+
+#图书类型管理
+def booktype_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    con_type = BookType.objects.all()
+    return render(request,'book_type.html',{'con_type':con_type})
+
+#图书类型添加
+def add_booktype_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        return render(request,'add_booktype.html')
+    else:
+        name = request.POST.get('add_name','')
+        day = request.POST.get('add_day','')
+        search_name = BookType.objects.filter(typename=name)
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("添加的类型已经存在");location.href="/booktype/"</script>')
+
+            else:
+                BookType.objects.create(typename=name,days=day)
+                return HttpResponse('<script>alert("添加成功");location.href="/booktype/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("输入的类型有误请重新添加");location.href="/add_booktype/"</script>')
+#修改类型
+def up_type_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method=='GET':
+        id = request.GET.get('id', '')
+        return render(request,'up_type.html',{'id':id})
+    else:
+        id = request.GET.get('id','')
+        id = int(id)
+        up_name = request.POST.get('up_name','')
+        up_days = request.POST.get('up_days','')
+        search_name = BookType.objects.filter(typename=up_name)
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("输入的类型已经存在");location.href="/booktype/"</script>')
+            else:
+                BookType.objects.filter(id=id).update(typename=up_name,days=up_days)
+                return HttpResponse('<script>alert("修改成功");location.href="/booktype/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("修改的类型有误请重新修改");location.href="/booktype/"</script>')
+#删除图书类型
+def del_type_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    id = request.GET.get('id', '')
+    id = int(id)
+    search_name = BookType.objects.get(id=id).bookinfo_set.all()
+    if search_name:
+        return HttpResponse('<script>alert("请清空当前类型的书籍在做删除");location.href="/booktype/"</script>')
+    else:
+        BookType.objects.filter(id=id).delete()
+        return HttpResponse('<script>alert("删除成功");location.href="/booktype/"</script>')
+
+#图书档案管理
+def book_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    all_book = BookInfo.objects.all()
+    return render(request,'book.html',{'all_book':all_book})
+
+#图书添加功能
+def add_book_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        all_type = BookType.objects.all()
+        all_case = Bookcase.objects.all()
+        all_pub = Publishing.objects.all()
+        return render(request, 'add_book.html', {'all_type': all_type, 'all_case': all_case, 'all_pub': all_pub})
+    else:
+        barcode = request.POST.get('barcode','')
+        bookname = request.POST.get('bookname','')
+        author = request.POST.get('author','')
+        price = request.POST.get('price','')
+        number = request.POST.get('number','')
+        type = request.POST.get('type','')
+        case = request.POST.get('case','')
+        pub = request.POST.get('pub','')
+        search_name = BookInfo.objects.filter(bookname=bookname)
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("添加的图书已经存在");location.href="/add_book/"</script>')
+            else:
+                booktype=BookType.objects.get(typename=type)
+                bookcase=Bookcase.objects.get(name=case)
+                bookpub=Publishing.objects.get(name=pub)
+                # for i in lista:
+                #     print i
+                # BookInfo.objects.create(bookpub=bookpub, booktype=booktype, bookcase=bookcase,**lista)
+                BookInfo.objects.create(barcode=barcode, bookname=bookname, author=author, price=price, number=number,
+                                        bookpub=bookpub, booktype=booktype, bookcase=bookcase)
+                return HttpResponse('<script>alert("添加成功");location.href="/add_book/"</script>')
+        except:
+            return HttpResponse('<script>alert("添加的类型有误请重新添加");location.href="/add_book/"</script>')
+#修改图书
+def up_book_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method=='GET':
+        id = request.GET.get('id','')
+        all_type = BookType.objects.all()
+        all_case = Bookcase.objects.all()
+        all_pub = Publishing.objects.all()
+        up_con = BookInfo.objects.get(id=id)
+        return render(request,'up_book.html',{'id':id,'all_type': all_type, 'all_case': all_case, 'all_pub': all_pub,'up_con':up_con})
+    else:
+        id = request.GET.get('id','')
+        barcode = request.POST.get('barcode', '')
+        bookname = request.POST.get('bookname', '')
+        author = request.POST.get('author', '')
+        price = request.POST.get('price', '')
+        type = request.POST.get('type', '')
+        case = request.POST.get('case', '')
+        pub = request.POST.get('pub', '')
+        number = request.POST.get('number', '')
+        search_name = BookInfo.objects.filter(bookname=bookname)
+        try:
+            if search_name:
+                return HttpResponse('<script>alert("修改的图书已经存在");location.href="/book/"</script>')
+            else:
+                booktype = BookType.objects.get(typename=type)
+                bookcase = Bookcase.objects.get(name=case)
+                bookpub = Publishing.objects.get(name=pub)
+                BookInfo.objects.filter(id=id).update(barcode=barcode, bookname=bookname, author=author, price=price,
+                                                      number=number,bookpub=bookpub,booktype=booktype, bookcase=bookcase)
+                return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
+        except Exception:
+            return HttpResponse('<script>alert("修改的类型有误请重新修改");location.href="/book/"</script>')
+#删除图书
+def del_book_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    id = request.GET.get('id','')
+    BookInfo.objects.filter(id=id).delete()
+    return HttpResponse('<script>alert("删除成功");location.href="/book/"</script>')
+
+
+
 # 图书借阅查询
 def borrow_search_view(request):
     if not get_session(request):
@@ -315,8 +537,34 @@ def borrow_view(request):
 
 #图书续借
 def renew_view(request):
-    return render(request,'renew.html')
-
+    if not get_session(request):
+        return redirect('/login')
+    if request.method=='GET':
+        up = request.GET.get('up','')
+        # print up
+        if up:
+            search_id = Borrow.objects.get(id=up)
+            days = search_id.book.booktype.days
+            new_backtime = search_id.backtime+timedelta(days=days)
+            search_id.backtime=new_backtime
+            search_id.save()
+            new_all = Borrow.objects.all()
+            search_rid = search_id.reader.id
+            search_all = Reader.objects.get(id=search_rid)
+            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all})
+        else:
+            return render(request, 'renew.html')
+    else:
+        code = request.POST.get('readercode','')
+        try:
+            search_code = Reader.objects.get(barcode=code)
+            if search_code:
+                b_all = search_code.borrow_set.all()
+                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all})
+            else:
+                return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
+        except:
+            return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
 #图书归还
 def book_back_view(request):
     if not get_session(request):
@@ -373,3 +621,146 @@ def pwd_modify_view(request):
         # elif len(name) == 0:
         #     return  HttpResponse('请检查用户名是否正确!')
 
+# 读者类型,删除读者类型,修改
+def reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == "GET":
+        if not id:
+            # print id, type(id)
+            reader_types = ReaderType.objects.all()
+            return render(request, 'reader_type.html', {"reader_types": reader_types})
+        else:
+            del_re_ty_id = ReaderType.objects.filter(id=id)
+            del_re_ty_id.delete()
+            reader_types = ReaderType.objects.all()
+            return render(request, 'reader_type.html', {"reader_types": reader_types})
+    else:
+        new_name = request.POST.get("name", "")
+        new_number = request.POST.get('number', '')
+        # print new_name, new_number,id
+        readertype_id = ReaderType.objects.filter(id=id)
+        try:
+            if new_name and new_number:
+                readertype_id.update(name=new_name, number=new_number)
+        except:
+            pass
+        reader_types = ReaderType.objects.all()
+        return render(request, 'reader_type.html', {"reader_types": reader_types})
+
+
+# 添加读者类型
+def add_reader_type(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        return render(request, 'add_reader_type.html')
+    else:
+        add_name = request.POST.get('add_name', '')
+        add_number = request.POST.get('add_number', '')
+        search_name = ReaderType.objects.filter(name=add_name)
+        try:
+            if not add_name:
+                return redirect("/add_reader_type/")
+            if not add_number:
+                return redirect("/add_reader_type/")
+        except:
+            return redirect("/add_reader_type/")
+
+        if search_name:
+            return render(request, 'no_add_reader_type.html')
+
+        ReaderType.objects.create(name=add_name, number=add_number)
+        return redirect('/reader_type/')
+
+
+# 修改读者类型
+def modify_reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        con = ReaderType.objects.get(id=id)
+        return render(request, 'modify_reader_type.html', {'con': con})
+
+
+# 读者信息,修改，删除
+def reader_view(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    # name 读者姓名，barcode 条形码，created 创建日期
+
+    # 在python2的字符编码问题时常会遇到类似
+    # “UnicodeEncodeError: 'ascii'codec can't encode characters
+    # in position 0-5: ordinal not in range(128)”的编码错误。
+    # 以下三行解决此问题
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    if request.method == 'GET':
+        if not id:
+            readers = Reader.objects.all()
+            return render(request, "reader.html", {"readers": readers})
+        else:
+            reader_id = Reader.objects.filter(id=id)
+            reader_id.delete()
+            readers = Reader.objects.all()
+            return render(request, "reader.html", {"readers": readers})
+    else:
+        new_name = request.POST.get("name", "")
+        new_sex = request.POST.get("sex", "")
+        new_barcode = request.POST.get("barcode", "")
+        new_tel = request.POST.get("tel", "")
+        new_email = request.POST.get("email", "")
+        new_created = request.POST.get("created", "")
+        new_readertype = request.POST.get("readertype", "")
+
+        reader_id = Reader.objects.filter(id=id)
+        try:
+            reader_id.update(name=new_name, sex_id=new_sex, barcode=new_barcode, tel=new_tel, email=new_email,
+                             created=new_created, readertype_id=new_readertype)
+        except:
+            pass
+        return redirect("/reader/")
+
+
+# 添加读者信息
+def add_reader(request):
+    if not get_session(request):
+        return redirect('/login')
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    if request.method == "GET":
+        return render(request, "add_readerinfo.html")
+    else:
+        add_name = request.POST.get("add_name", "")
+        add_sex = request.POST.get("add_sex", "")
+        add_barcode = request.POST.get("add_barcode", "")
+        add_tel = request.POST.get("add_tel", "")
+        add_email = request.POST.get("add_email", "")
+        add_created = request.POST.get("add_created", "")
+        add_readertype = request.POST.get("add_readertype", "")
+
+        try:
+            search_barcode = Reader.objects.filter(barcode=add_barcode)
+        except:
+            search_barcode = []
+
+        if not search_barcode:
+            try:
+                Reader.objects.create(name=add_name, sex_id=add_sex, barcode=add_barcode, tel=add_tel, email=add_email,
+                                  created=add_created, readertype_id=add_readertype)
+            except:
+                return render(request," not_bug.html")
+        return redirect("/reader/")
+
+
+# 修改读者
+def modify_reader(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        Re_ids = Reader.objects.get(id=id)
+        return render(request, 'modify_reader.html', {'Re_ids': Re_ids})

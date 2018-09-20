@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block main_page %}
     <div class="container">
-        <div class="wrap">
+       <div class="wrap">
             <p class="manage_tool"><a href="/bookcase/">返回书架展示页面</a></p>
             <table class="table table-bordered">
                 <tbody>
-                    <form action="/add_case/" method="post" onsubmit="return checkAll()">
+                    <form action="/up_case/?id={{ up_case.id }}" method="post" onsubmit="return checkAll()">
                         {% csrf_token %}
                         <tr>
-                            <td style="padding:5px;">书架名字<input type="text" name="add_name" id="add"
-                                onblur="checkAdd(this.value)"><span id="addSpan"></span></td>
+                            <td style="padding:5px;">修改名<input type="text" name="up_name" id="up_name"
+                            onblur="checkUp(this.value)"><span id="up_nameSpan"></span></td>
                         </tr>
                         <tr>
                             <td style="padding:5px;"><input type="submit" value="提交"></td>
@@ -21,16 +21,16 @@
         </div>
     </div>
     <script>
-        function checkAdd(add){
-            var _add = add.trim()
-            if(_add.length==0){
-                $('#addSpan').html('不能为空');
+        function checkUp(up_name){
+            var _up_name = up_name.trim()
+            if(_up_name.length==0){
+                $('#up_nameSpan').html('不能为空');
                 return false
             }
             return true
         }
         function checkAll() {
-            return checkAdd($('#add').val())
+            return checkUp($('#up_name').val())
         }
     </script>
 {% endblock %}

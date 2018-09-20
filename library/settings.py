@@ -156,3 +156,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media') # 对应URL的图片存放的路径
 
 
 
+
+

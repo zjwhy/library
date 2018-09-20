@@ -11,33 +11,39 @@
                             <i class="iconfont">&#xe760;</i>
                             读者验证
                         </span>
-                        <label for="">读者条形码：<input type="text"></label>
-                        <button>确认</button>
+                        <form action="/renew/" method="post">
+                            {% csrf_token %}
+                            <label for="">读者条形码：<input type="text" name="readercode" value="{{ search_code.barcode }}" ></label>
+                            <input type="submit" value="确认">
+                        </form>
+{#                        <button name="readercode">确认</button>#}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="">姓名：<input type="text"></label>
+                        <label for="">姓名：<input type="text" value="{{ search_code.name }}"></label>
                     </td>
                     <td>
-                        <label for="">性别：<input type="text"></label>
+                        <label for="">性别：<input type="text" value="{{ search_code.sex.sex }}"></label>
                     </td>
                     <td>
-                        <label for="">读者类型：<input type="text"></label>
+                        <label for="">读者类型：<input type="text" value="{{ search_code.readertype.name }}"></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="">证件类型：<input type="text"></label>
+                        <label for="">证件类型：<input type="text" ></label>
                     </td>
                     <td>
                         <label for="">证件号码：<input type="text"></label>
                     </td>
                     <td>
-                        <label for="">可借数量：<input type="text">册</label>
+                        <label for="">可借数量：<input type="text" value="{{ search_code.readertype.number }}">册</label>
                     </td>
                 </tr>
             </table>
+            <form action="/renew/" >
+            {% csrf_token %}
             <table class="table table-bordered" style="text-align: center">
                 <tr bgcolor="#d3d3d3">
                     <th>图书名称</th>
@@ -46,20 +52,28 @@
                     <th>出版社</th>
                     <th>书架</th>
                     <th>定价(元)</th>
+
                     <th>
-                        <button>完成续借</button>
+{#                        <button>完成续借</button>#}
+                        <input type="submit" value="完成续借">
                     </th>
                 </tr>
-                <tr>
-                    <td>js成神之路</td>
-                    <td>1月3日</td>
-                    <td>2月3日</td>
-                    <td>长江大学出版社</td>
-                    <td>A架</td>
-                    <td>30</td>
-                    <td><input type="radio"></td>
-                </tr>
+
+                {% for b in b_all %}
+                    <tr>
+                        <td>{{ b.book.bookname }}</td>
+                        <td>{{ b.borrowtime|date:'Y年m月d日' }}</td>
+                        <td>{{ b.backtime|date:'Y年m月d日' }}</td>
+                        <td>{{ b.book.bookpub.name }}</td>
+                        <td>{{ b.book.bookcase.name }}</td>
+                        <td>{{ b.book.price }}</td>
+
+                        <td><input type="radio" name="up" value="{{ b.id }}"></td>
+                    </tr>
+                {% endfor %}
+
             </table>
+            </form>
         </div>
 
     </div>

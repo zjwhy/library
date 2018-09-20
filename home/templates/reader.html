@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    <div class="main_page">
+        <div class="container">
+            <h3><i class="iconfont">&#xe78f;</i>读者档案管理</h3>
+            <div class="wrap">
+                <p class="manage_tool"><a href="/add_readerinfo/">添加读者信息</a></p>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr align="center" bgcolor="#d3d3d3">
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>条形码</th>
+                        <th>电话</th>
+                        <th>邮箱</th>
+                        <th>注册时间</th>
+                        <th>读者类型</th>
+                        <th>修改</th>
+                        <th>删除</th>
+                    </tr>
+                    {% for reader in readers %}
+                        <tr>
+                            <td align="center">{{ reader.name }}</td>
+                            <td align="center">{{ reader.sex.sex }}</td>
+                            <td align="center">{{ reader.barcode }}</td>
+                            <td align="center">{{ reader.tel }}</td>
+                            <td align="center">{{ reader.email }}</td>
+                            <td align="center">{{ reader.created|date:'y-m-d' }}</td>
+                            <td align="center">{{ reader.readertype.name }}</td>
+                            <td align="center"><a href="/modify_reader/{{ reader.id }}">修改</a></td>
+                            <td align="center"><a href="/reader/{{ reader.id }}">删除</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
