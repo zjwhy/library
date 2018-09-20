@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block main_page %}
+<div class="container">
+    <h3><i class="iconfont">&#xe6ad;</i>借阅到期提醒</h3>
+    <div class="wrap">
+        <table class="table table-bordered" style="text-align: center">
+            <tr bgcolor="#d3d3d3">
+                <th>图书条形码</th>
+                <th>图书名称</th>
+                <th>读者条形码</th>
+                <th>读者名称</th>
+                <th>借阅时间</th>
+                <th>应还时间</th>
+            </tr>
+            {% if reminds %}
+            {% for remind in reminds %}
+
+            <tr>
+                <td>{{ remind.book.barcode }}</td>
+                <td>{{ remind.book.bookname }}</td>
+                <td>{{ remind.reader.barcode }}</td>
+                <td>{{ remind.reader.name }}</td>
+                <td>{{ remind.borrowtime|date:'Y-m-d' }}</td>
+                <td>{{ remind.backtime|date:'Y-m-d' }}</td>
+            </tr>
+
+            {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">--暂无图书归还提醒--</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}

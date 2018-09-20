@@ -28,7 +28,7 @@
                         <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
                         <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
                         <td align="center"><a href="">权限设置</a></td>
-                        <td align="center"><a href="">删除</a></td>
+                        <td align="center"><a href="javascript:void(0)" onclick="delBookById({{ manager.id }})">删除</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -37,4 +37,15 @@
         </div>
 
     </div>
+    <script>
+        function delBookById(bid){
+            var flag = confirm('您确定要删除当前记录吗？');
+            if(flag){
+                location.href='/del_manager/?id='+bid;
+            }else{
+                location.href='/manager/';
+            }
+        }
+
+    </script>
 {% endblock %}

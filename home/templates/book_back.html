@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block main_page %}
+    <div class="container">
+        <h3><i class="iconfont">&#xe615;</i>图书归还</h3>
+        <div class="wrap">
+            <form action="/book_back/" method="post">
+                {% csrf_token %}
+                <table class="table table-bordered">
+                    <tr></tr>
+                    <tr>
+                        <td colspan="3" align="center">
+                            <span class="readerVerify">
+                                <i class="iconfont">&#xe760;</i>
+                                读者验证
+                            </span>
+                            <label for="">读者条形码：<input type="text" name="reader_barcode" id="readerSearch" placeholder="请输入读者条形码" value="{{ reader.barcode }}"></label>
+                            <button id="searchBtn" name="confirm" value="True">确认</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="">姓名：<input type="text" value="{{ reader.name }}" disabled></label>
+                        </td>
+                        <td>
+                            <label for="">性别：<input type="text" value="{{ reader.sex.sex }}" disabled></label>
+                        </td>
+                        <td>
+                            <label for="">读者类型：<input type="text" value="{{ reader.readertype.name }}" disabled></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="">联系电话：<input type="text" value="{{ reader.tel }}" disabled></label>
+                        </td>
+                        <td>
+                            <label for="">可借数量：<input type="text" value="{{ reader.readertype.number }}" disabled>册</label>
+                        </td>
+                        <td>
+                            <label for="">已借数量：<input type="text" disabled value="{{ count }}"></label>册
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-bordered" style="text-align: center">
+                    <tr bgcolor="#d3d3d3">
+                        <th>图书名称</th>
+                        <th>借阅时间</th>
+                        <th>应还时间</th>
+                        <th>出版社</th>
+                        <th>书架</th>
+                        <th>定价(元)</th>
+                        <th><button id="bookBack">完成归还</button></th>
+                    </tr>
+                    {% if borrows %}
+                    {% for borrow in borrows %}
+                        <tr>
+                            <td>{{ borrow.book.bookname }}</td>
+                            <td>{{ borrow.borrowtime|date:'Y-m-d' }}</td>
+                            <td>{{ borrow.backtime|date:'Y-m-d' }}</td>
+                            <td>{{ borrow.book.bookpub.name }}</td>
+                            <td>{{ borrow.book.bookcase.name }}</td>
+                            <td>{{ borrow.book.price }}</td>
+                            <td><input type="radio" name="checkbox" value="{{ borrow.id }}"></td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7">--暂无借阅信息--</td>
+                        </tr>
+                    {% endif %}
+                </table>
+                <script>
+{#                    $('#readerSearch').val('');#}
+                    function isnull(va,val) {
+                        var str = val.trim();//去除两端空格，非空判断;
+                        if (str == '' || str == undefined || str == null) {
+                            $(va).val('');
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    $('#readerSearch').click(function () {
+                        $('#readerSearch').val('');
+                    });
+                    $('#searchBtn').click(function (event) {
+                        var oTxt = document.getElementById('readerSearch');
+                        return isnull(oTxt,oTxt.value);
+                    });
+                    $('#bookBack').click(function (event) {
+                        var oTxt = document.getElementById('readerSearch');
+                        var oBook = document.getElementsByName('checkbox');
+                        return isnull(oTxt,oTxt.value)&&$(oBook).is(':checked');
+                    });
+                </script>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
