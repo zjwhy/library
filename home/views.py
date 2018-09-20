@@ -19,7 +19,7 @@ def __set_session(request,name):
         # 设置超时时间
         request.session.set_expiry(10)
     # 设置生效时间
-    request.session.set_expiry(1 * 60)
+    request.session.set_expiry(10 * 60)
 # 获取用户名session
 def get_userName(request):
     return request.session.get("username", None)
@@ -548,10 +548,12 @@ def renew_view(request):
             new_backtime = search_id.backtime+timedelta(days=days)
             search_id.backtime=new_backtime
             search_id.save()
-            new_all = Borrow.objects.all()
             search_rid = search_id.reader.id
             search_all = Reader.objects.get(id=search_rid)
-            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all})
+            new_all = Borrow.objects.filter(reader_id=search_rid).all()
+            # 总借阅数量
+            count = Borrow.objects.filter(reader_id=search_rid).count()
+            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all,'count':count})
         else:
             return render(request, 'renew.html')
     else:
@@ -560,7 +562,9 @@ def renew_view(request):
             search_code = Reader.objects.get(barcode=code)
             if search_code:
                 b_all = search_code.borrow_set.all()
-                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all})
+                # 总借阅数量
+                count = Borrow.objects.filter(reader_id=search_code.id).count()
+                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all,'count':count})
             else:
                 return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
         except:
