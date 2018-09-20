@@ -3,6 +3,9 @@
     <div class="container">
         <h3><i class="iconfont">&#xe615;</i>图书续借</h3>
         <div class="wrap">
+            <form action="" method="post">
+
+                {% csrf_token %}
             <table class="table table-bordered">
                 <tr></tr>
                 <tr>
@@ -11,33 +14,34 @@
                             <i class="iconfont">&#xe760;</i>
                             读者验证
                         </span>
-                        <label for="">读者条形码：<input type="text"></label>
+                        <label for="">读者条形码：<input type="text" name="reader_barcode"></label>
                         <button>确认</button>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="">姓名：<input type="text"></label>
+                        <label for="">姓名：<input type="text" value="{{ reader.name }}"></label>
                     </td>
                     <td>
-                        <label for="">性别：<input type="text"></label>
+                        <label for="">性别：<input type="text" value="{{ reader.sex.sex }}"></label>
                     </td>
                     <td>
-                        <label for="">读者类型：<input type="text"></label>
+                        <label for="">读者类型：<input type="text" value="{{ reader.readertype.name }}"></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="">证件类型：<input type="text"></label>
+                        <label for="">证件类型：<input type="text" value="条形码"></label>
                     </td>
                     <td>
-                        <label for="">证件号码：<input type="text"></label>
+                        <label for="">证件号码：<input type="text" value="{{ reader.barcode }}"></label>
                     </td>
                     <td>
-                        <label for="">可借数量：<input type="text">册</label>
+                        <label for="">可借数量：<input type="text" value="{{ reader.readertype.number }}">册</label>
                     </td>
                 </tr>
             </table>
+            </form>
             <table class="table table-bordered" style="text-align: center">
                 <tr bgcolor="#d3d3d3">
                     <th>图书名称</th>
@@ -50,8 +54,9 @@
                         <button>完成续借</button>
                     </th>
                 </tr>
+                {% if books %}
                 <tr>
-                    <td>js成神之路</td>
+                    <td>{{ books.bookname }}</td>
                     <td>1月3日</td>
                     <td>2月3日</td>
                     <td>长江大学出版社</td>
@@ -59,7 +64,9 @@
                     <td>30</td>
                     <td><input type="radio"></td>
                 </tr>
+                {% endif %}
             </table>
+
         </div>
 
     </div>

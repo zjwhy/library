@@ -3,62 +3,71 @@
     <div class="container">
         <h3><i class="iconfont">&#xe615;</i>图书借阅</h3>
         <div class="wrap">
+            <form action="" method="post">
+                {% csrf_token %}
             <table class="table table-bordered">
                 <tr></tr>
+
                 <tr>
+
                     <td colspan="3" align="center">
                         <span class="readerVerify">
                             <i class="iconfont">&#xe760;</i>
                             读者验证
                         </span>
                         <label for="">读者条形码：</label>
-                        <input type="text">
+                        <input type="text" name="reader_barcode">
                         <button>确认</button>
                     </td>
+
                 </tr>
                 <tr>
                     <td>
-                        <label for="">姓名：<input type="text"></label>
+                        <label for="">姓名：<input type="text" value="{{ reader.name }}"></label>
                     </td>
                     <td>
-                        <label for="">性别：<input type="text"></label>
+                        <label for="">性别：<input type="text" value="{{ reader.sex.sex }}"></label>
                     </td>
                     <td>
-                        <label for="">读者类型：<input type="text"></label>
+                        <label for="">读者类型：<input type="text" value="{{ reader.readertype.name }}"></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="">证件类型：<input type="text"></label>
+                        <label for="">证件类型：<input type="text" value="条形码"></label>
                     </td>
                     <td>
-                        <label for="">证件号码：<input type="text"></label>
+                        <label for="">证件号码：<input type="text" value="{{ reader.barcode }}"></label>
                     </td>
                     <td>
-                        <label for="">可借数量：<input type="text"></label>册
+                        <label for="">可借数量：<input type="text" value="{{ reader.readertype.number }}"></label>册
                     </td>
                 </tr>
                 <tr>
+{#                    <form action="/borrow/" method="post">#}
+{#                    {% csrf_token %}#}
                     <td colspan="3">
                         <label for="">添加依据：</label>
                         <label class="radio-inline">
                             <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 图书条形码
                         </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 图书名称
-                        </label>
+{#                        <label class="radio-inline">#}
+{#                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 图书名称#}
+{#                        </label>#}
                         {#                        <span class="b_type">#}
                         {#                            <input type="radio" name="b_type">#}
                         {#                        </span>#}
                         {#                        <span class="b_type">#}
                         {#                            <input type="radio" name="b_type">#}
                         {#                        </span>#}
-                        <input type="text">
+                        <input type="text" name="book">
                         <button>确定</button>
                         <button>完成借阅</button>
                     </td>
+{#                    </form>#}
                 </tr>
             </table>
+            </form>
             <table class="table table-bordered" style="text-align: center">
                 <tr bgcolor="#d3d3d3">
                     <th>图书名称</th>
@@ -68,15 +77,28 @@
                     <th>书架</th>
                     <th>定价(元)</th>
                 </tr>
-                <tr>
-                    <td>js成神之路</td>
-                    <td>1月3日</td>
-                    <td>2月3日</td>
-                    <td>长江大学出版社</td>
-                    <td>A架</td>
-                    <td>30</td>
-                </tr>
+                {% if books %}
+
+                    <tr>
+                        <td>{{ books.bookname }}</td>
+                        <td>1月3日</td>
+                        <td>2月3日</td>
+                        <td>{{ books.bookpub.name }}</td>
+                        <td>{{ books.bookcase.name }}</td>
+                        <td>{{ books.price }}</td>
+                    </tr>
+
+
+                {% else %}
+                    <tr>
+                        <td colspan="6">请输入图书条形码或图书名称--</td>
+                    </tr>
+
+
+                {% endif %}
+
             </table>
+
         </div>
 
     </div>

@@ -103,7 +103,7 @@ def login_view(request):
         else:
             return redirect('/login/')
 
-
+#注册功能
 def register_view(request):
     if request.method=='GET':
         return render(request,'register.html')
@@ -190,11 +190,24 @@ def borrow_remind_view(request):
 
 #图书借阅
 def borrow_view(request):
+    if request.method == 'GET':
+        reader = None
+        books = None
+    else:
+        reader_barcode = request.POST.get('reader_barcode','')
+        book = request.POST.get('book','')
+        print reader_barcode,book
+        reader = Reader.objects.get(barcode=reader_barcode)
+        books = BookInfo.objects.get(barcode=book)
+    return render(request,'borrow.html',{'reader':reader,'books':books})
 
-    return render(request,'borrow.html')
+
+
+
 
 #图书续借
 def renew_view(request):
+
     return render(request,'renew.html')
 
 #图书归还
