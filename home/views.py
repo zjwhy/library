@@ -23,7 +23,7 @@ def __set_session(request,name):
 # 获取用户名session
 def get_userName(request):
     return request.session.get("username", None)
-#  获取用户登录session
+# 获取用户登录session
 def get_session(request):
     is_login = request.session.get("is_login", None)
     print is_login
@@ -80,12 +80,21 @@ def manager_view(request):
     if not get_session(request):
         return redirect('/login')
     managers = Manager.objects.all()
+    purviews = Purview.objects.all()
+    if purviews.count() != managers.count():
+        for manager in managers:
+            if not purviews.filter(manager=manager):
+                Purview.objects.create(manager=manager)
+    id = request.GET.get('id','')
+    print id
     return render(request, 'manager.html',{"managers":managers})
 #删除管理员
 def del_manager_view(request):
     if not get_session(request):
         return redirect('/login')
     id = request.GET.get('id','')
+    if Manager.objects.get(id=id).name == get_userName(request):
+        return HttpResponse('<script>alert("禁止操作当前登录用户");location.href="/manager/"</script>')
     Manager.objects.filter(id=id).delete()
     return HttpResponse('<script>alert("删除成功");location.href="/manager/"</script>')
 
@@ -165,7 +174,7 @@ def login_view(request):
             return redirect('/')
 
         else:
-            return redirect('/login')
+            return HttpResponse('<script>alert("请输入正确用户名和密码");location.href="/login"</script>')
 
 
 def register_view(request):
@@ -177,16 +186,17 @@ def register_view(request):
         pwd = request.POST.get('password','')
 
         # print name,password
+        if name and pwd:
+            try:
+                manage = Manager.objects.get(name=name,pwd=pwd)
+            except Manager.DoesNotExist:
+                manage = Manager.objects.create(name=name,pwd=pwd)
 
-        try:
-            manage = Manager.objects.get(name=name,pwd=pwd)
-        except Manager.DoesNotExist:
-            manage = Manager.objects.create(name=name,pwd=pwd)
+            # manageInfo = Manager.objects.create(manage=manage)
 
-        # manageInfo = Manager.objects.create(manage=manage)
-
-        return redirect('/login')
-
+            return HttpResponse('<script>alert("注册用户已存在");location.href="/login"</script>')
+        else:
+            return HttpResponse('<script>alert("注册用户不合法");location.href="/register"</script>')
 
 
 # #添加管理员系统

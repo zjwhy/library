@@ -3,7 +3,6 @@
     <div class="container">
         <h3><i class="iconfont">&#xe605;</i>管理员设置</h3>
         <div class="wrap">
-{#            <p class="manage_tool"><a href="/add_manager">添加管理员信息</a></p>#}
             <table class="table table-bordered">
                 <tbody>
                 <tr class="text-center" bgcolor="#d3d3d3">
@@ -17,33 +16,92 @@
                     <th>删除</th>
                 </tr>
                 {% for manager in managers %}
-
-
-
                     <tr>
                         <td align="center">{{ manager.name }}</td>
-                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
-                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
-                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
-                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
-                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" value="checkbox" checked=""></td>
-                        <td align="center"><a href="">权限设置</a></td>
-                        <td align="center"><a href="javascript:void(0)" onclick="delBookById({{ manager.id }})">删除</a></td>
+                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" id="sysset{{ manager.id }}" value="{{ manager.purview_set.sysset }}"
+                                                  {% if manager.purview_set.sysset == 1 %}checked="checked"{% endif %}>
+                        </td>
+                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" id="readerset{{ manager.id }}" value="{{ manager.purview_set.readerset }}"
+                                                  {% if manager.purview_set.readerset == 1 %}checked="checked"{% endif %}>
+                        </td>
+                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" id="bookset{{ manager.id }}" value="{{ manager.purview_set.bookset }}"
+                                                  {% if manager.purview_set.bookset == 1 %}checked="checked"{% endif %}>
+                        </td>
+                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" id="borrowback{{ manager.id }}" value="{{ manager.purview_set.borrowback }}"
+                                                  {% if manager.purview_set.borrowback == 1 %}checked="checked"{% endif %}>
+                        </td>
+                        <td align="center"><input name="checkbox" type="checkbox" class="noborder" id="sysquery{{ manager.id }}" value="{{ manager.purview_set.sysquery }}"
+                                                  {% if manager.purview_set.sysquery == 1 %}checked="checked"{% endif %}>
+                        </td>
+                        <td align="center"><a href="javascript:void(0)" onclick="modifyManagerById({{ manager.id }},sysset{{ manager.id }}.value,readerset{{ manager.id }}.value,bookset{{ manager.id }}.value,borrowback{{ manager.id }}.value,sysquery{{ manager.id }}.value)">权限设置</a></td>
+                        <td align="center"><a href="javascript:void(0)" onclick="delManagerById({{ manager.id }})">删除</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
-
             </table>
         </div>
 
     </div>
     <script>
-        function delBookById(bid){
+
+        {% for manager in managers %}
+            var sysset{{ manager.id }} = document.getElementById('sysset{{ manager.id }}');
+            var readerset{{ manager.id }} = document.getElementById('readerset{{ manager.id }}');
+            var bookset{{ manager.id }} = document.getElementById('bookset{{ manager.id }}');
+            var borrowback{{ manager.id }} = document.getElementById('borrowback{{ manager.id }}');
+            var sysquery{{ manager.id }} = document.getElementById('sysquery{{ manager.id }}');
+            sysset{{ manager.id }}.click(function () {
+                if(sysset{{ manager.id }}.checked){
+                    sysset{{ manager.id }}.value = 1;
+                }else{
+                    sysset{{ manager.id }}.value = 0;
+                }
+            });
+            readerset{{ manager.id }}.click(function () {
+                if(readerset{{ manager.id }}.checked){
+                    readerset{{ manager.id }}.value = 1;
+                }else{
+                    readerset{{ manager.id }}.value = 0;
+                }
+            });
+            bookset{{ manager.id }}.click(function () {
+                if(bookset{{ manager.id }}.checked){
+                    bookset{{ manager.id }}.value = 1;
+                }else{
+                    bookset{{ manager.id }}.value = 0;
+                }
+            });
+            borrowback{{ manager.id }}.click(function () {
+                if(borrowback{{ manager.id }}.checked){
+                    borrowback{{ manager.id }}.value = 1;
+                }else{
+                    borrowback{{ manager.id }}.value = 0;
+                }
+            });
+            sysquery{{ manager.id }}.click(function () {
+                if(sysquery{{ manager.id }}.checked){
+                    sysquery{{ manager.id }}.value = 1;
+                }else{
+                    sysquery{{ manager.id }}.value = 0;
+                }
+            });
+        {% endfor %}
+
+        function modifyManagerById(mid,ssv,rsv,bsv,bbv,aqv) {
+            var flag = confirm('您确定要修改当前记录吗？');
+            if (flag) {
+                location.href = '/manager/?id=' + mid + '&sysset=' + ssv + '&readerset=' + rsv + '&bookset=' + bsv + '&borrowback=' + bbv + '&sysquery=' + aqv;
+            } else {
+                location.href = '/manager/';
+            }
+        }
+        function delManagerById(bid) {
             var flag = confirm('您确定要删除当前记录吗？');
-            if(flag){
-                location.href='/del_manager/?id='+bid;
-            }else{
-                location.href='/manager/';
+            if (flag) {
+                location.href = '/del_manager/?id=' + bid;
+            } else {
+                location.href = '/manager/';
             }
         }
 
