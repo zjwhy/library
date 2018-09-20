@@ -623,6 +623,8 @@ def pwd_modify_view(request):
 
 # 读者类型,删除读者类型,修改
 def reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
     if request.method == "GET":
         if not id:
             # print id, type(id)
@@ -649,6 +651,8 @@ def reader_type(request, id=0):
 
 # 添加读者类型
 def add_reader_type(request):
+    if not get_session(request):
+        return redirect('/login')
     if request.method == 'GET':
         return render(request, 'add_reader_type.html')
     else:
@@ -672,6 +676,8 @@ def add_reader_type(request):
 
 # 修改读者类型
 def modify_reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
     if request.method == 'GET':
         con = ReaderType.objects.get(id=id)
         return render(request, 'modify_reader_type.html', {'con': con})
@@ -679,6 +685,8 @@ def modify_reader_type(request, id=0):
 
 # 读者信息,修改，删除
 def reader_view(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
     # name 读者姓名，barcode 条形码，created 创建日期
 
     # 在python2的字符编码问题时常会遇到类似
@@ -718,6 +726,8 @@ def reader_view(request, id=0):
 
 # 添加读者信息
 def add_reader(request):
+    if not get_session(request):
+        return redirect('/login')
     import sys
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -749,6 +759,8 @@ def add_reader(request):
 
 # 修改读者
 def modify_reader(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
     if request.method == 'GET':
         Re_ids = Reader.objects.get(id=id)
         return render(request, 'modify_reader.html', {'Re_ids': Re_ids})
