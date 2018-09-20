@@ -3,47 +3,48 @@
 {#    > <a href="" >系统设置 ></a> <a href="">图书馆信息 >>></a>#}
 {#{% endblock site %}#}
 {% block main_page %}
-{% if con %}
 <div class="container">
     <h3><i class="iconfont">&#xe615;</i>图书馆信息</h3>
     <div class="wrap">
-        <form name="form1" action="" method="post">
+        <form name="form1" action="" method="post" onsubmit="return checkAll()">
             {% csrf_token %}
             <table>
                 <tbody>
                 <tr align="center">
                     <td width="20%" align="left" style="padding:5px;">图书馆名称：</td>
                     <td width="80%" align="left">
-                        <input name="libraryname" type="text" id="libraryname" value="{{ con.name }}" size="30">
-
-                    </td>
+                        <input name="libraryname" type="text" id="libraryname" value="{{ con.name }}" size="30"
+                        id="library" onblur="checkLibraryName(this.value)"><span id="librarySpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">馆长：</td>
-                    <td align="left"><input name="curator" type="text" id="curator" size="30" value="{{ con.curator }}"></td>
+                    <td align="left"><input name="curator" type="text" id="curator" size="30" value="{{ con.curator }}"
+                    onblur="checkCurator(this.value)"><span id="curatorSpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">联系电话：</td>
-                    <td align="left"><input name="tel" type="text" id="tel" size="30" value="{{ con.tel }}"></td>
+                    <td align="left"><input name="tel" type="text" id="tel" size="30" value="{{ con.tel }}"
+                    onblur="checkTel(this.value)"><span id="telSpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">联系地址：</td>
-                    <td align="left"><input name="address" type="text" id="address" size="30" value="{{ con.address }}"></td>
+                    <td align="left"><input name="address" type="text" id="address" size="30" value="{{ con.address }}"
+                    onblur="checkAddress(this.value)"><span id="addressSpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">联系邮箱：</td>
-                    <td align="left"><input name="email" type="text" id="email" size="30" value="{{ con.email }}">
-                    </td>
+                    <td align="left"><input name="email" type="text" id="email" size="30" value="{{ con.email }}"
+                    onblur="checkEmail(this.value)"><span id="emailSpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">图书馆网址：</td>
-                    <td align="left"><input name="url" type="text" id="url" size="30" value="{{ con.url }}"></td>
+                    <td align="left"><input name="url" type="text" id="url" size="30" value="{{ con.url }}"
+                    onblur="checkUrl(this.value)"><span id="urlSpan"></span></td>
                 </tr>
                 <tr>
                     <td align="left" style="padding:5px;">建馆时间：</td>
                     <td align="left"><input name="createDate" type="text" id="createDate" size="30"
-                                            value="{{ con.createdate|date:'Y-m-d'}}">
-                    </td>
+                     onblur="checkTime(this.value)" value="{{ con.createdate|date:'Y-m-d'}}"><span id="timeSpan"></span></td>
                 </tr>
                 <tr>
                     <td height="84" align="left" style="padding:5px;">图书馆简介：</td>
@@ -62,65 +63,77 @@
         </form>
     </div>
 </div>
-{% else %}
-<div class="container">
-    <h3><i class="iconfont">&#xe615;</i>图书馆信息</h3>
-    <div class="wrap">
-        <form name="form1" action="" method="post">
-            {% csrf_token %}
-            <table>
-                <tbody>
-                <tr align="center">
-                    <td width="20%" align="left" style="padding:5px;">图书馆名称：</td>
-                    <td width="80%" align="left">
-                        <input name="libraryname" type="text" id="libraryname" value="是" size="30">
+    <script>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">馆长：</td>
-                    <td align="left"><input name="curator" type="text" id="curator" size="30" value="wgh"></td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">联系电话：</td>
-                    <td align="left"><input name="tel" type="text" id="tel" size="30" value="1363********"></td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">联系地址：</td>
-                    <td align="left"><input name="address" type="text" id="address" size="30" value="ccs"></td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">联系邮箱：</td>
-                    <td align="left"><input name="email" type="text" id="email" size="30" value="wgh717@****.com">
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">图书馆网址：</td>
-                    <td align="left"><input name="url" type="text" id="url" size="30" value="http://"></td>
-                </tr>
-                <tr>
-                    <td align="left" style="padding:5px;">建馆时间：</td>
-                    <td align="left"><input name="createDate" type="text" id="createDate" size="30"
-                                            value="1999-05-06">
-                    </td>
-                </tr>
-                <tr>
-                    <td height="84" align="left" style="padding:5px;">图书馆简介：</td>
-                    <td align="left"><textarea name="introduce" cols="50" rows="5" class="wenbenkuang"
-                                               id="introduce">是</textarea></td>
-                </tr>
-                <tr>
-                    <td height="65" align="left" style="padding:5px;">&nbsp;</td>
-                    <td><input name="Submit" type="submit" class="btn_grey" value="保存"
-                               onclick="return checkForm(form1)">
-                        &nbsp;
-                        <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-</div>
-{% endif %}
+{#        判断为空不能条件function#}
+        function checkLibraryName(libraryName) {
+            var library_name = libraryName.trim();
+            if(library_name.length==0){
+                $('#librarySpan').html('图书馆名称不能为空！');
+                return false;
+            }
+            return true;
+        }
 
+        function checkCurator(curator){
+            var name = curator.trim();
+            if(name.length==0){
+                $('#curatorSpan').html('馆长姓名不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkTel(tel) {
+            var l_tel = tel.trim();
+            if(l_tel.length==0){
+                $('#telSpan').html('电话号码不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkAddress(address) {
+            var l_address = address.trim();
+            if(l_address.length==0){
+                $('#addressSpan').html('地址不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkEmail(email) {
+            var _email = email.trim();
+            if(_email.length==0){
+                $('#emailSpan').html('邮件地址不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkUrl(url) {
+            var _url = url.trim();
+            if(_url.length==0){
+                $('#urlSpan').html('网站地址不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkTime(time) {
+            var _time = time.trim();
+            if(_time.length==0){
+                $('#timeSpan').html('建馆时间不能为空');
+                return false;
+            }
+            return true;
+        }
+        function checkAll() {
+            var _libraryName = checkLibraryName($('#libraryname').val());
+            var _curator = checkCurator($('#curator').val());
+            var _tel = checkTel($('#tel').val());
+            var _address = checkAddress($('#address').val());
+            var _email = checkEmail($('#email').val());
+            var _url = checkUrl($('#url').val());
+            var _date = checkTime($('#createDate').val());
+            return _libraryName&&_curator&&_tel&&_address&&_email&&_url&&_date;
+
+        }
+
+    </script>
 {% endblock %}

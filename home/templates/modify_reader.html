@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block main_page %}
+    {% if Re_ids %}
+        <div class="container">
+            <h3><i class="iconfont">&#xe615;</i>读者管理</h3>
+            <div class="wrap">
+                <form name="form1" action="/reader/{{ Re_ids.id }}" method="post">
+                    {% csrf_token %}
+                    <table>
+                        <tbody>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">名字：</td>
+                            <td width="80%" align="left">
+                                <input name="name" type="text" value="{{ Re_ids.name }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">性别：</td>
+                            <td width="80%" align="left">
+                                <input name="sex" type="text" value="{{ Re_ids.sex.sex }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">条形码：</td>
+                            <td width="80%" align="left">
+                                <input name="barcode" type="text" value="{{ Re_ids.barcode }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">电话：</td>
+                            <td width="80%" align="left">
+                                <input name="tel" type="text" value="{{ Re_ids.tel }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">邮箱：</td>
+                            <td width="80%" align="left">
+                                <input name="email" type="text" value="{{ Re_ids.email }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">注册时间：</td>
+                            <td width="80%" align="left">
+                                <input name="created" type="text" value="{{ Re_ids.created }}" size="30">
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td width="20%" align="left" style="padding:5px;">读者类型：</td>
+                            <td width="80%" align="left">
+                                <input name="readertype" type="text" value="{{ Re_ids.readertype }}" size="30">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td height="65" align="left" style="padding:5px;">&nbsp;</td>
+                            <td><input name="Submit" type="submit" class="btn_grey" value="保存"
+                                       onclick="return checkForm(form1)"
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
