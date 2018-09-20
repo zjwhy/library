@@ -19,7 +19,7 @@ def __set_session(request,name):
         # 设置超时时间
         request.session.set_expiry(10)
     # 设置生效时间
-    request.session.set_expiry(1 * 60)
+    request.session.set_expiry(10 * 60)
 # 获取用户名session
 def get_userName(request):
     return request.session.get("username", None)
@@ -548,10 +548,12 @@ def renew_view(request):
             new_backtime = search_id.backtime+timedelta(days=days)
             search_id.backtime=new_backtime
             search_id.save()
-            new_all = Borrow.objects.all()
             search_rid = search_id.reader.id
             search_all = Reader.objects.get(id=search_rid)
-            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all})
+            new_all = Borrow.objects.filter(reader_id=search_rid).all()
+            # 总借阅数量
+            count = Borrow.objects.filter(reader_id=search_rid).count()
+            return render(request,'renew.html',{'search_code':search_all,'b_all':new_all,'count':count})
         else:
             return render(request, 'renew.html')
     else:
@@ -560,7 +562,9 @@ def renew_view(request):
             search_code = Reader.objects.get(barcode=code)
             if search_code:
                 b_all = search_code.borrow_set.all()
-                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all})
+                # 总借阅数量
+                count = Borrow.objects.filter(reader_id=search_code.id).count()
+                return render(request,'renew.html',{'search_code':search_code,'b_all':b_all,'count':count})
             else:
                 return HttpResponse('<script>alert("查无此人记录");location.href="/renew/"</script>')
         except:
@@ -621,3 +625,146 @@ def pwd_modify_view(request):
         # elif len(name) == 0:
         #     return  HttpResponse('请检查用户名是否正确!')
 
+# 读者类型,删除读者类型,修改
+def reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == "GET":
+        if not id:
+            # print id, type(id)
+            reader_types = ReaderType.objects.all()
+            return render(request, 'reader_type.html', {"reader_types": reader_types})
+        else:
+            del_re_ty_id = ReaderType.objects.filter(id=id)
+            del_re_ty_id.delete()
+            reader_types = ReaderType.objects.all()
+            return render(request, 'reader_type.html', {"reader_types": reader_types})
+    else:
+        new_name = request.POST.get("name", "")
+        new_number = request.POST.get('number', '')
+        # print new_name, new_number,id
+        readertype_id = ReaderType.objects.filter(id=id)
+        try:
+            if new_name and new_number:
+                readertype_id.update(name=new_name, number=new_number)
+        except:
+            pass
+        reader_types = ReaderType.objects.all()
+        return render(request, 'reader_type.html', {"reader_types": reader_types})
+
+
+# 添加读者类型
+def add_reader_type(request):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        return render(request, 'add_reader_type.html')
+    else:
+        add_name = request.POST.get('add_name', '')
+        add_number = request.POST.get('add_number', '')
+        search_name = ReaderType.objects.filter(name=add_name)
+        try:
+            if not add_name:
+                return redirect("/add_reader_type/")
+            if not add_number:
+                return redirect("/add_reader_type/")
+        except:
+            return redirect("/add_reader_type/")
+
+        if search_name:
+            return render(request, 'no_add_reader_type.html')
+
+        ReaderType.objects.create(name=add_name, number=add_number)
+        return redirect('/reader_type/')
+
+
+# 修改读者类型
+def modify_reader_type(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        con = ReaderType.objects.get(id=id)
+        return render(request, 'modify_reader_type.html', {'con': con})
+
+
+# 读者信息,修改，删除
+def reader_view(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    # name 读者姓名，barcode 条形码，created 创建日期
+
+    # 在python2的字符编码问题时常会遇到类似
+    # “UnicodeEncodeError: 'ascii'codec can't encode characters
+    # in position 0-5: ordinal not in range(128)”的编码错误。
+    # 以下三行解决此问题
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    if request.method == 'GET':
+        if not id:
+            readers = Reader.objects.all()
+            return render(request, "reader.html", {"readers": readers})
+        else:
+            reader_id = Reader.objects.filter(id=id)
+            reader_id.delete()
+            readers = Reader.objects.all()
+            return render(request, "reader.html", {"readers": readers})
+    else:
+        new_name = request.POST.get("name", "")
+        new_sex = request.POST.get("sex", "")
+        new_barcode = request.POST.get("barcode", "")
+        new_tel = request.POST.get("tel", "")
+        new_email = request.POST.get("email", "")
+        new_created = request.POST.get("created", "")
+        new_readertype = request.POST.get("readertype", "")
+
+        reader_id = Reader.objects.filter(id=id)
+        try:
+            reader_id.update(name=new_name, sex_id=new_sex, barcode=new_barcode, tel=new_tel, email=new_email,
+                             created=new_created, readertype_id=new_readertype)
+        except:
+            pass
+        return redirect("/reader/")
+
+
+# 添加读者信息
+def add_reader(request):
+    if not get_session(request):
+        return redirect('/login')
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+    if request.method == "GET":
+        return render(request, "add_readerinfo.html")
+    else:
+        add_name = request.POST.get("add_name", "")
+        add_sex = request.POST.get("add_sex", "")
+        add_barcode = request.POST.get("add_barcode", "")
+        add_tel = request.POST.get("add_tel", "")
+        add_email = request.POST.get("add_email", "")
+        add_created = request.POST.get("add_created", "")
+        add_readertype = request.POST.get("add_readertype", "")
+
+        try:
+            search_barcode = Reader.objects.filter(barcode=add_barcode)
+        except:
+            search_barcode = []
+
+        if not search_barcode:
+            try:
+                Reader.objects.create(name=add_name, sex_id=add_sex, barcode=add_barcode, tel=add_tel, email=add_email,
+                                  created=add_created, readertype_id=add_readertype)
+            except:
+                return render(request," not_bug.html")
+        return redirect("/reader/")
+
+
+# 修改读者
+def modify_reader(request, id=0):
+    if not get_session(request):
+        return redirect('/login')
+    if request.method == 'GET':
+        Re_ids = Reader.objects.get(id=id)
+        return render(request, 'modify_reader.html', {'Re_ids': Re_ids})

@@ -62,7 +62,7 @@ class Library(models.Model):
     email = models.CharField(max_length=100,unique=True, blank=True, verbose_name='联系邮箱')
     url = models.CharField(max_length=100,unique=True, blank=True,verbose_name='图书馆地址')
     createdate = models.DateField(db_column='createDate',unique=True, blank=True,verbose_name='建管时间')  # Field name made lowercase.
-    introduce = models.TextField(blank=True,verbose_name='图书馆简介')
+    introduce = models.TextField(blank=True, verbose_name='图书馆简介')
 
     class Meta:
         db_table = 't_library'
