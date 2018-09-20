@@ -23,45 +23,25 @@
 <div class="current_page">
     <div class="container">
         <span class="current_area">
-            当前位置：<a href="">系统设置 ></a> <a href="">管理员设置 >>></a>
+            当前位置：<a href="JavaScript:">系统设置 ></a> <a href="JavaScript:">管理员设置 >>></a>
         </span>
+        <script>
+            console.log(window.location.href);
+        </script>
     </div>
 </div>
-<div class="main_page">
-    {% block main_page %}
-        {#  下方div-container为挖洞页面，完成contain后请注释 #}
-    {% endblock %}
-
-</div>
-
-
-<footer class="text-center">
-    {% include 'footer.html' %}
-</footer>
 <script src="{% static '' %}jquery-1.12.3.min.js"></script>
 <script src="{% static '' %}bootstrap.min.js"></script>
 <script src="{% static '' %}bootstrap-paginator.js"></script>
-<script>
-    $(function () {
-        var currentPage = {{ page_list.0 }};
-        var totalPages = {{ page_list.1 }};
-        $("#page").bootstrapPaginator({
-            bootstrapMajorVersion:3, //对应的bootstrap版本
-            currentPage: currentPage, //当前页数
-            numberOfPages: 6, //每次显示页数
-            totalPages:totalPages, //总页数
-            shouldShowPage:true,//是否显示该按钮
-            useBootstrapTooltip:true,
-            //点击事件
-            onPageClicked: function (event, originalEvent, type, page) {
-                location='/home/'+page;
-            }
-        });
-    });
-{#    $('search_btn').click(function () {#}
-{#        location='/register/';#}
-{#    });#}
-</script>
+<div class="main_page">
+    {% block main_page %}
+    {% endblock %}
+</div>
+<footer class="text-center">
+    {% include 'footer.html' %}
+</footer>
+
+
 
 </body>
 </html>
