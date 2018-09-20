@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-
+{% block current_page %}
+    <a href="/home/"> 首页</a>
+{% endblock current_page %}
 {% block main_page %}
     <div class="container">
         <h3><i class="iconfont">&#xe6e4;</i>图书借阅排行榜</h3>
@@ -57,7 +59,7 @@
             $("#page").bootstrapPaginator({
                 bootstrapMajorVersion:3, //对应的bootstrap版本
                 currentPage: currentPage, //当前页数
-                numberOfPages: 6, //每次显示页数
+                numberOfPages: 5, //每次显示页数
                 totalPages:totalPages, //总页数
                 shouldShowPage:true,//是否显示该按钮
                 useBootstrapTooltip:true,
