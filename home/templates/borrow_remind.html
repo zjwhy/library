@@ -12,14 +12,24 @@
                 <th>借阅时间</th>
                 <th>应还时间</th>
             </tr>
+            {% if reminds %}
+            {% for remind in reminds %}
+
             <tr>
-                <td>12398390280</td>
-                <td>js成神之路</td>
-                <td>文学</td>
-                <td>长江大学出版社</td>
-                <td>A架</td>
-                <td>么有</td>
+                <td>{{ remind.book.barcode }}</td>
+                <td>{{ remind.book.bookname }}</td>
+                <td>{{ remind.reader.barcode }}</td>
+                <td>{{ remind.reader.name }}</td>
+                <td>{{ remind.borrowtime|date:'Y-m-d' }}</td>
+                <td>{{ remind.backtime|date:'Y-m-d' }}</td>
             </tr>
+
+            {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">--暂无图书归还提醒--</td>
+                </tr>
+            {% endif %}
         </table>
     </div>
 </div>

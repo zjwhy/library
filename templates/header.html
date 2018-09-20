@@ -3,11 +3,16 @@
     <h1>
         图书馆管理系统
         <div class="top_action">
-            <span class="btn"><a href="path"><i class="iconfont">&#xe767;</i>刷新页面</a></span>
-            <span class="btn"><a href="/login/"><i class="iconfont">&#xe75c;</i>关闭系统</a></span>
+            <span class="btn" id="refresh"><i class="iconfont">&#xe767;</i>刷新页面</span>
+            <span class="btn"><a href="/logout/"><i class="iconfont">&#xe75c;</i>关闭系统</a></span>
         </div>
+        <script>
+            var refresh = document.getElementById('refresh');
+            refresh.onclick=function () {
+                location.reload();
+            };
+
+        </script>
     </h1>
-
         <span class="pull-right user_id">当前登录用户：{{ username }}</span>
-
 </div>

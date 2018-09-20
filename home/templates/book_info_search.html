@@ -21,8 +21,8 @@
                                 <option value="bookpub">出版社</option>
                                 <option value="bookcase">书架</option>
                             </select>
-                        <input type="text" name="search">
-                        <input type="submit" value="查询">
+                        <input type="text" name="search" id="search" placeholder="请输入查询信息">
+                        <input type="submit" value="查询" id="searchBtn">
 
                     </td>
                 </tr>
@@ -37,30 +37,41 @@
                     <th>出版社</th>
                     <th>书架</th>
                 </tr>
-                {% if not books %}
+                {% if book_infos %}
                     {% for book_info in book_infos %}
-                    <tr>
-                        <td>{{ book_info.barcode }}</td>
-                        <td>{{ book_info.bookname }}</td>
-                        <td>{{ book_info.author }}</td>
-                        <td>{{ book_info.booktype.typename }}</td>
-                        <td>{{ book_info.bookpub.name }}</td>
-                        <td>{{ book_info.bookcase.name }}</td>
-                    </tr>
+                        <tr>
+                            <td>{{ book_info.barcode }}</td>
+                            <td>{{ book_info.bookname }}</td>
+                            <td>{{ book_info.author }}</td>
+                            <td>{{ book_info.booktype.typename }}</td>
+                            <td>{{ book_info.bookpub.name }}</td>
+                            <td>{{ book_info.bookcase.name }}</td>
+                        </tr>
                     {% endfor %}
                 {% else %}
-
-                <tr>
-                    <td>12398390280</td>
-                    <td>js成神之路</td>
-                    <td>js</td>
-                    <td>文学</td>
-                    <td>长江大学出版社</td>
-                    <td>A架</td>
-                </tr>
+                    <tr>
+                        <td colspan="6">--查询的图书不存在或查询有误请核对--</td>
+                    </tr>
                 {% endif %}
 
             </table>
         </div>
     </div>
+    <script>
+        $('#search').focus(function () {
+            $('#search').val('');
+        });
+        function isnull(val) {
+            var str = val.trim();//去除两端空格，非空判断;
+            if(str == '' || str == undefined || str == null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        $('#searchBtn').click(function (event) {
+            var oTxt = document.getElementById('search');
+            return isnull(oTxt.value);
+        });
+    </script>
 {% endblock %}
