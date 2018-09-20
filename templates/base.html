@@ -1,4 +1,3 @@
-{% load custom_filter %}
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
@@ -24,23 +23,11 @@
 <div class="current_page">
     <div class="container">
         <span class="current_area">
-            当前位置：
-            <a href="JavaScript:"><span id="currentPage"></span>系统设置 ></a> <a href="JavaScript:">管理员设置 >>></a>
-            <script>
-                function url_splice() {
-                    url = window.location.href;
-                    str = url.split('/');
-                    return str[str.length-2];
-                }
-                function pageName(url){
-                    var currentPage = document.getElementById('currentPage');
-                    if(url == 'home'){
-                        currentPage.innerHTML = '首页 > ';
-                    }
-                }
-                pageName(url_splice());
-            </script>
+            当前位置：{% block current_page %}{% endblock current_page %}
         </span>
+        <script>
+            console.log(window.location.href);
+        </script>
     </div>
 </div>
 <script src="{% static '' %}jquery-1.12.3.min.js"></script>

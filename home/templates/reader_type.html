@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block current_page %}
+    <a href="/home/"> 首页 > </a><a href="/home/"> 读者类型管理 >> </a>
+{% endblock current_page %}
 {% block main_page %}
     <div class="container">
         <h3><i class="iconfont">&#xe78f;</i>读者类型管理</h3>
@@ -7,14 +10,14 @@
             <table class="table table-bordered">
                 <tbody>
                 <tr align="center" bgcolor="#d3d3d3">
-                    <th width="40%">读者类型编号</th>
-                    <th width="40%">读者类型名称</th>
-                    <th width="30%">可借数量</th>
-                    <th width="16%">修改</th>
-                    <th width="14%">删除</th>
+                    <th >读者类型编号</th>
+                    <th >读者类型名称</th>
+                    <th >可借数量</th>
+                    <th >修改</th>
+                    <th >删除</th>
                 </tr>
                 {% for reader_type in reader_types %}
-                    <tr>
+                    <tr align="center">
                         <td>{{ reader_type.id }}</td>
                         <td>{{ reader_type.name }}</td>
                         <td>{{ reader_type.number }}</td>

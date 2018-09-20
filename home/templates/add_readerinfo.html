@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block current_page %}
+    <a href="/home/">  首页 > </a><a href="/reader/"> 读者档案管理 >> </a><a href="/add_readerinfo/"> 添加读者信息 >> </a>
+{% endblock current_page %}
 {% block main_page %}
     <div class="wrap">
         <p class="manage_tool"><a href="/reader/">返回读者页面</a></p>
@@ -7,32 +10,66 @@
             <form action="/add_readerinfo/" method="post">
                 {% csrf_token %}
                 <tr>
-                    <td style="padding:5px;">读者姓名:<input type="text" name="add_name"></td>
+                    <td style="padding:5px;">读者姓名:<input type="text" name="add_name" id="reader"></td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">性&emsp;&emsp;别:<input type="text" name="add_sex"></td>
+                    <td style="padding:5px;">性&emsp;&emsp;别:
+                        {% for sex in sexs %}
+
+                        <span style="width:50px;" >&emsp;</span>
+                        <label for=""><input type="radio" name="add_sex" value="{{ sex.id }}" checked="checked">{{ sex.sex }}</label>
+                        <span style="width:50px;" >&emsp;</span>
+                        {% endfor %}
+                    </td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">条形码&emsp;:<input type="text" name="add_barcode"></td>
+                    <td style="padding:5px;">条形码&emsp;:<input type="number" name="add_barcode" id="barcode"></td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">电&emsp;&emsp;话:<input type="text" name="add_tel"></td>
+                    <td style="padding:5px;">电&emsp;&emsp;话:<input type="number" name="add_tel" id="telephone"></td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">邮&emsp;&emsp;箱:<input type="text" name="add_email"></td>
+                    <td style="padding:5px;">邮&emsp;&emsp;箱:<input type="email" name="add_email" id="email"></td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">注册时间:<input type="text" name="add_created"></td>
+                    <td style="padding:5px;">注册时间:<input type="date" name="add_created" id="created" ></td>
                 </tr>
                 <tr>
-                    <td style="padding:5px;">读者类型:<input type="text" name="add_readertype"></td>
+                    <td style="padding:5px;">读者类型:
+                        <select name="add_readertype" style="height: 30px;">
+                            {% for reader_type in reader_types %}
+
+                            <option value="{{ reader_type.id }}">{{ reader_type.name }}</option>
+
+                            {% endfor %}
+                        </select>
                 </tr>
                 <tr>
-                    <td style="padding:5px;"><input type="submit" value="提交"></td>
+                    <td style="padding:5px;"><input type="submit" value="提交" id="checkInfo"></td>
                 </tr>
             </form>
             </tbody>
 
         </table>
     </div>
+    <script>
+
+        function isnull(val) {
+            var str = val.trim();//去除两端空格，非空判断;
+            if (str == '' || str == undefined || str == null) {
+                alert('信息不完整，请核对');
+                return false;
+            } else {
+                return true;
+            }
+        }
+        $('#checkInfo').click(function () {
+            var reader = document.getElementById('reader');
+            var barcode = document.getElementById('barcode');
+            var telephone = document.getElementById('telephone');
+            var email = document.getElementById('email');
+            var created = document.getElementById('created');
+            return isnull(reader.value)&&isnull(barcode.value)&&isnull(telephone.value)&&isnull(email.value)&&isnull(created.value);
+        });
+    </script>
 {% endblock %}

@@ -45,7 +45,7 @@ class BookInfo(models.Model):
     # operator = models.CharField(max_length=30, blank=True, null=True,verbose_name='操作者')
     # del_field = models.IntegerField(db_column='del', blank=True, null=True,verbose_name='撤管时间')  # Field renamed because it was a Python reserved word.
     number = models.IntegerField(blank=True,default=1,verbose_name='馆藏数量')
-    borrownumber = models.IntegerField(blank=True,default=1,verbose_name='借出数量')
+    borrownumber = models.IntegerField(blank=True,default=0,verbose_name='借出数量')
     count = models.IntegerField(blank=True,default=0,verbose_name='借阅次数')
     class Meta:
         db_table = 't_bookinfo'

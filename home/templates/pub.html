@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block current_page %}
+    <a href="/home/">  首页 > </a><a href="/pub/"> 出版社设置 >> </a>
+{% endblock current_page %}
+{% block main_page %}
+    <div class="container">
+        <h3><i class="iconfont">&#xe615;</i>图书档案管理</h3>
+        <div class="wrap">
+            <p class="manage_tool"><a href="/add_pub/">添加出版社</a></p>
+            <table class="table table-bordered">
+                <tbody>
+                <tr align="center" bgcolor="#d3d3d3">
+                    <th >出版社编号</th>
+                    <th >出版社名称</th>
+                    <th >修改</th>
+                    <th >删除</th>
+                </tr>
+            {% for pub in all_pub %}
+
+                <tr>
+                    <td align="center">{{ pub.id }}</td>
+                    <td align="center"><a href="">{{ pub.name }}</a></td>
+                    <td align="center"><a href="/up_pub/?id={{ pub.id }}">修改</a></td>
+                    <td align="center"><a href="javascript:void(0)" onclick="delBookById({{ pub.id }})">删除</a></td>
+                </tr>
+
+            {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+
+    <script>
+        function delBookById(bid){
+            var flag = confirm('您确定要删除当前记录吗？');
+            if(flag){
+                location.href='/del_pub/?id='+bid;
+            }else{
+                location.href='/pub/';
+            }
+        }
+
+    </script>
+{% endblock %}
