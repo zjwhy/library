@@ -31,7 +31,8 @@ def get_session(request):
 # 退出系统，清除session
 def logout_view(request):
     # 删除用户session
-    request.session.clear()
+    # request.session.clear()
+    request.session.set_expiry(-1)
     # 注销
     return redirect("/login")
 
@@ -194,8 +195,6 @@ def register_view(request):
 
 #添加书架
 def add_case_view(request):
-    if not get_session(request):
-        return redirect('/login')
     if not get_session(request):
         return redirect('/login')
     if request.method == 'GET':
