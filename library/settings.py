@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'library',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'z5487693',
         'PORT': '3306',
         'HOST': '127.0.0.1',
     }
@@ -142,6 +142,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/' #图片存放URL
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') # 对应URL的图片存放的路径
+
+
 
 
 
