@@ -49,4 +49,23 @@
         </div>
 
     </div>
+    <script>
+        $(function () {
+            var currentPage = {{ page_list.0 }};
+            var totalPages = {{ page_list.1 }};
+            $("#page").bootstrapPaginator({
+                bootstrapMajorVersion:3, //对应的bootstrap版本
+                currentPage: currentPage, //当前页数
+                numberOfPages: 6, //每次显示页数
+                totalPages:totalPages, //总页数
+                shouldShowPage:true,//是否显示该按钮
+                useBootstrapTooltip:true,
+                //点击事件
+                onPageClicked: function (event, originalEvent, type, page) {
+                    location='/home/'+page;
+                }
+            });
+        });
+
+    </script>
 {% endblock %}
