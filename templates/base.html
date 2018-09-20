@@ -23,7 +23,7 @@
 <div class="current_page">
     <div class="container">
         <span class="current_area">
-            当前位置：<a href="JavaScript:">系统设置 ></a> <a href="JavaScript:">管理员设置 >>></a>
+            当前位置：{% block current_page %}{% endblock current_page %}
         </span>
         <script>
             console.log(window.location.href);

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block current_page %}
+    <a href="/home/"> 首页 ></a><a href="/borrow/"> 图书借阅 >></a>
+{% endblock current_page %}
 {% block main_page %}
     <script>
     if('{{ success }}' == ''){

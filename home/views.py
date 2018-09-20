@@ -121,7 +121,7 @@ def bookcase_view(request):
 
 # 分页
 def __page(num=1):
-    size = 1
+    size = 3
     paginator = Paginator(BookInfo.objects.all().order_by('-count'),size)
     if num <= 0:
         num = 1
