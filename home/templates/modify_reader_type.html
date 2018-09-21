@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block current_page %}
+    <a href="/home/"> 首页 > </a><a href="JavaScript:"> 读者管理 >> </a><a href="JavaScript:"> 读者类型管理 >>> </a><a href="JavaScript:"> 修改读者类型 >>>> </a>
+{% endblock current_page %}
 {% block main_page %}
     {% if con %}
         <div class="container">
@@ -29,14 +32,18 @@
                             <td><input name="Submit" type="submit" class="btn_grey" value="保存"
                                        onclick="return checkForm(form1)">
                                 &nbsp;
-                                <input name="Submit2" type="reset" class="btn_grey" value="取消"></td>
+                                <input name="Submit2" id="Submit2" type="reset" class="btn_grey" value="取消"></td>
                         </tr>
                         </tbody>
                     </table>
                 </form>
             </div>
         </div>
-
+        <script>
+        $('#Submit2').click(function () {
+            location.href='/reader_type/'
+        });
+        </script>
     {% endif %}
 
 {% endblock %}

@@ -23,10 +23,9 @@ def __set_session(request,name):
 # 获取用户名session
 def get_userName(request):
     return request.session.get("username", None)
-#  获取用户登录session
+# 获取用户登录session
 def get_session(request):
     is_login = request.session.get("is_login", None)
-    print is_login
     return is_login
 # 退出系统，清除session
 def logout_view(request):
@@ -35,11 +34,41 @@ def logout_view(request):
     request.session.set_expiry(-1)
     # 注销
     return redirect("/login")
-
+# 用户权限
+def purview_set(request,num=1):
+    current_user = get_userName(request)
+    manager = Manager.objects.get(name=current_user)
+    if num == 1:
+        if Purview.objects.get(manager=manager).sysset == 0:
+            return False
+        else:
+            return True
+    elif num == 2:
+        if Purview.objects.get(manager=manager).readerset == 0:
+            return False
+        else:
+            return True
+    elif num == 3:
+        if Purview.objects.get(manager=manager).bookset == 0:
+            return False
+        else:
+            return True
+    elif num == 4:
+        if Purview.objects.get(manager=manager).borrowback == 0:
+            return False
+        else:
+            return True
+    elif num == 5:
+        if Purview.objects.get(manager=manager).sysquery == 0:
+            return False
+        else:
+            return True
 # 系统设置
 def modify_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 1):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         con = Library.objects.first()
         return render(request, 'modify.html', {'con': con})
@@ -79,13 +108,49 @@ def index_view(request):
 def manager_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request,1):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
+    id = request.GET.get('id', '')
+    sysset = request.GET.get('sysset', '')
+    readerset = request.GET.get('readerset', '')
+    bookset = request.GET.get('bookset', '')
+    borrowback = request.GET.get('borrowback', '')
+    sysquery = request.GET.get('sysquery', '')
+    # if sysset and readerset and bookset and borrowback and sysquery:
+    #     print id, sysset, readerset, bookset, borrowback, sysquery
+    #     print Manager.objects.filter(id=id)
     managers = Manager.objects.all()
+    purviews = Purview.objects.all()
+    if purviews.count() != managers.count():
+        for manager in managers:
+            if not purviews.filter(manager=manager):
+                Purview.objects.create(manager=manager)
+    # manager = Manager.objects.filter(id=id)
+    try:
+        man = Manager.objects.get(id=id)
+        if man.name == get_userName(request):
+            return HttpResponse('<script>alert("禁止修改已登录用户的权限");location.href="/manager/"</script>')
+    except:
+        pass
+    if sysset and readerset and bookset and borrowback and sysquery and id:
+        # if Purview.objects.all().order_by('id').first()
+        try:
+            pur = Purview.objects.all().order_by('id').first()
+            if '%s'%pur.id == '%s'%id:
+                return HttpResponse('<script>alert("禁止修改超级管理员的权限");location.href="/manager/"</script>')
+        except:
+            pass
+        Purview.objects.filter(manager_id=id).update(sysset=sysset,readerset=readerset,bookset=bookset,borrowback=borrowback,sysquery=sysquery)
     return render(request, 'manager.html',{"managers":managers})
 #删除管理员
 def del_manager_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 1):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     id = request.GET.get('id','')
+    if Manager.objects.get(id=id).name == get_userName(request):
+        return HttpResponse('<script>alert("禁止操作当前登录用户");location.href="/manager/"</script>')
     Manager.objects.filter(id=id).delete()
     return HttpResponse('<script>alert("删除成功");location.href="/manager/"</script>')
 
@@ -93,6 +158,8 @@ def del_manager_view(request):
 def parameter_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 1):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         con = Parameter.objects.first()
         # print con
@@ -116,12 +183,14 @@ def parameter_view(request):
 def bookcase_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     bookcase = Bookcase.objects.all()
     return render(request, 'bookcase.html',{'bookcase':bookcase})
 
 # 分页
 def __page(num=1):
-    size = 1
+    size = 3
     paginator = Paginator(BookInfo.objects.all().order_by('-count'),size)
     if num <= 0:
         num = 1
@@ -165,7 +234,7 @@ def login_view(request):
             return redirect('/')
 
         else:
-            return redirect('/login')
+            return HttpResponse('<script>alert("请输入正确用户名和密码");location.href="/login"</script>')
 
 
 def register_view(request):
@@ -177,16 +246,17 @@ def register_view(request):
         pwd = request.POST.get('password','')
 
         # print name,password
+        if name and pwd:
+            try:
+                manage = Manager.objects.get(name=name,pwd=pwd)
+            except Manager.DoesNotExist:
+                manage = Manager.objects.create(name=name,pwd=pwd)
 
-        try:
-            manage = Manager.objects.get(name=name,pwd=pwd)
-        except Manager.DoesNotExist:
-            manage = Manager.objects.create(name=name,pwd=pwd)
+            # manageInfo = Manager.objects.create(manage=manage)
 
-        # manageInfo = Manager.objects.create(manage=manage)
-
-        return redirect('/login')
-
+            return HttpResponse('<script>alert("注册用户已存在");location.href="/login"</script>')
+        else:
+            return HttpResponse('<script>alert("注册用户不合法");location.href="/register"</script>')
 
 
 # #添加管理员系统
@@ -197,6 +267,8 @@ def register_view(request):
 def add_case_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         return render(request, 'add_case.html')
     else:
@@ -212,12 +284,16 @@ def add_case_view(request):
 def pub_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     all_pub = Publishing.objects.all()
     return render(request,'pub.html',{'all_pub':all_pub})
 #出版社添加
 def add_pub_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method=='GET':
         return render(request,'add_pub.html')
     else:
@@ -230,6 +306,10 @@ def add_pub_view(request):
             return HttpResponse('<script>alert("添加成功");location.href="/pub/"</script>')
 #删除出版社
 def del_pub_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     id = request.GET.get('id','')
     all_pub = Publishing.objects.get(id=id).bookinfo_set.all()
     if all_pub:
@@ -239,6 +319,10 @@ def del_pub_view(request):
         return HttpResponse('<script>alert("删除成功");location.href="/pub/"</script>')
 #修改出版社
 def up_pub_view(request):
+    if not get_session(request):
+        return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method=='GET':
         id = request.GET.get('id','')
         up_pub = Publishing.objects.get(id=id)
@@ -284,6 +368,8 @@ def selectAll(select,search):
 def book_info_search_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 5):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         book_infos = []
     else:
@@ -306,6 +392,8 @@ def borrowAll(timeFrom,timeTo):
 def up_case_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         id = request.GET.get('id','')
         # print id
@@ -330,6 +418,8 @@ def up_case_view(request):
 def del_case_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     id = request.GET.get('id','')
     print id
     id=int(id)
@@ -346,6 +436,8 @@ def del_case_view(request):
 def booktype_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     con_type = BookType.objects.all()
     return render(request,'book_type.html',{'con_type':con_type})
 
@@ -353,6 +445,8 @@ def booktype_view(request):
 def add_booktype_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         return render(request,'add_booktype.html')
     else:
@@ -372,6 +466,8 @@ def add_booktype_view(request):
 def up_type_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method=='GET':
         id = request.GET.get('id', '')
         return render(request,'up_type.html',{'id':id})
@@ -393,6 +489,8 @@ def up_type_view(request):
 def del_type_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     id = request.GET.get('id', '')
     id = int(id)
     search_name = BookType.objects.get(id=id).bookinfo_set.all()
@@ -406,6 +504,8 @@ def del_type_view(request):
 def book_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     all_book = BookInfo.objects.all()
     return render(request,'book.html',{'all_book':all_book})
 
@@ -414,6 +514,8 @@ def book_view(request):
 def add_book_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         all_type = BookType.objects.all()
         all_case = Bookcase.objects.all()
@@ -448,6 +550,8 @@ def add_book_view(request):
 def up_book_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method=='GET':
         id = request.GET.get('id','')
         all_type = BookType.objects.all()
@@ -467,21 +571,23 @@ def up_book_view(request):
         number = request.POST.get('number', '')
         search_name = BookInfo.objects.filter(bookname=bookname)
         try:
-            if search_name:
-                return HttpResponse('<script>alert("修改的图书已经存在");location.href="/book/"</script>')
-            else:
-                booktype = BookType.objects.get(typename=type)
-                bookcase = Bookcase.objects.get(name=case)
-                bookpub = Publishing.objects.get(name=pub)
-                BookInfo.objects.filter(id=id).update(barcode=barcode, bookname=bookname, author=author, price=price,
-                                                      number=number,bookpub=bookpub,booktype=booktype, bookcase=bookcase)
-                return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
+            # if search_name:
+            #     return HttpResponse('<script>alert("修改的图书已经存在");location.href="/book/"</script>')
+            # else:
+            booktype = BookType.objects.get(typename=type)
+            bookcase = Bookcase.objects.get(name=case)
+            bookpub = Publishing.objects.get(name=pub)
+            BookInfo.objects.filter(id=id).update(barcode=barcode, bookname=bookname, author=author, price=price,
+                                                  number=number,bookpub=bookpub,booktype=booktype, bookcase=bookcase)
+            return HttpResponse('<script>alert("修改成功");location.href="/book/"</script>')
         except Exception:
             return HttpResponse('<script>alert("修改的类型有误请重新修改");location.href="/book/"</script>')
 #删除图书
 def del_book_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 3):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     id = request.GET.get('id','')
     BookInfo.objects.filter(id=id).delete()
     return HttpResponse('<script>alert("删除成功");location.href="/book/"</script>')
@@ -492,6 +598,8 @@ def del_book_view(request):
 def borrow_search_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 5):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         return render(request, 'borrow_search.html')
     else:
@@ -531,6 +639,8 @@ def borrow_search_view(request):
 def borrow_remind_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 5):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     now_time = datetime.now()
     remind_time = now_time + timedelta(days=14)
     remind_day = remind_time.strftime('%Y-%m-%d')
@@ -541,6 +651,8 @@ def borrow_remind_view(request):
 def borrow_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 4):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     reader = None
     books = None
     success = None
@@ -584,6 +696,8 @@ def borrow_view(request):
 def renew_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 4):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method=='GET':
         up = request.GET.get('up','')
         # print up
@@ -618,6 +732,8 @@ def renew_view(request):
 def book_back_view(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request,4):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     reader = None
     borrows = None
     checkbox = ''
@@ -674,6 +790,8 @@ def pwd_modify_view(request):
 def reader_type(request, id=0):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == "GET":
         if not id:
             # print id, type(id)
@@ -702,6 +820,8 @@ def reader_type(request, id=0):
 def add_reader_type(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         return render(request, 'add_reader_type.html')
     else:
@@ -727,6 +847,8 @@ def add_reader_type(request):
 def modify_reader_type(request, id=0):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         con = ReaderType.objects.get(id=id)
         return render(request, 'modify_reader_type.html', {'con': con})
@@ -736,8 +858,9 @@ def modify_reader_type(request, id=0):
 def reader_view(request, id=0):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     # name 读者姓名，barcode 条形码，created 创建日期
-
     # 在python2的字符编码问题时常会遇到类似
     # “UnicodeEncodeError: 'ascii'codec can't encode characters
     # in position 0-5: ordinal not in range(128)”的编码错误。
@@ -777,6 +900,8 @@ def reader_view(request, id=0):
 def add_reader(request):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     import sys
     reload(sys)
     sys.setdefaultencoding('utf-8')
@@ -819,6 +944,8 @@ def add_reader(request):
 def modify_reader(request, id=0):
     if not get_session(request):
         return redirect('/login')
+    if not purview_set(request, 2):
+        return HttpResponse('<script>alert("您没有权限进行访问");location.href="/home/"</script>')
     if request.method == 'GET':
         Re_ids = Reader.objects.get(id=id)
         return render(request, 'modify_reader.html', {'Re_ids': Re_ids})

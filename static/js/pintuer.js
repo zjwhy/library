@@ -16,7 +16,7 @@ $(function(){
 						$checktext=$checktext+"<li>"+$checktype[1]+"</li>";
 					}
 				}
-			};
+			}
 			if($checkstate){
 				e.closest('.form-group').removeClass("check-error");
 				e.parent().find(".input-help").remove();
@@ -94,4 +94,4 @@ $(function(){
 				}
 		}
 	};
-})
+});

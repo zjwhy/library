@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
+{% block current_page %}
+    <a href="/home/">  首页 > </a><a href="JavaScript:"> 图书管理 >> </a><a href="JavaScript:"> 出版社设置 >>> </a><a href="JavaScript:"> 添加出版社展页面 >>>> </a>
+{% endblock current_page %}
 {% block main_page %}
     <div class="container">
         <div class="wrap">
-            <p class="manage_tool"><a href="/pub/">返回出版社展示页面</a></p>
+            <p class="manage_tool"><a href="/pub/">返回出版社</a></p>
             <table class="table table-bordered">
                 <tbody>
                     <form action="/add_pub/" method="post" onsubmit="return checkAll()">

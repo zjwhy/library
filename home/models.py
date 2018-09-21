@@ -45,7 +45,7 @@ class BookInfo(models.Model):
     # operator = models.CharField(max_length=30, blank=True, null=True,verbose_name='操作者')
     # del_field = models.IntegerField(db_column='del', blank=True, null=True,verbose_name='撤管时间')  # Field renamed because it was a Python reserved word.
     number = models.IntegerField(blank=True,default=1,verbose_name='馆藏数量')
-    borrownumber = models.IntegerField(blank=True,default=1,verbose_name='借出数量')
+    borrownumber = models.IntegerField(blank=True,default=0,verbose_name='借出数量')
     count = models.IntegerField(blank=True,default=0,verbose_name='借阅次数')
     class Meta:
         db_table = 't_bookinfo'
@@ -123,11 +123,11 @@ class Parameter(models.Model):
 class Purview(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     manager = models.ForeignKey(Manager,models.CASCADE)#管理员权限
-    sysset = models.IntegerField(blank=True,unique=True,verbose_name='系统设置')
-    readerset = models.IntegerField(blank=True,unique=True,verbose_name='读者管理')
-    bookset = models.IntegerField(blank=True,unique=True,verbose_name='图书管理')
-    borrowback = models.IntegerField(blank=True,unique=True,verbose_name='借还管理')
-    sysquery = models.IntegerField(blank=True,unique=True,verbose_name='系统查询')
+    sysset = models.IntegerField(default=1,blank=True,verbose_name='系统设置')
+    readerset = models.IntegerField(default=1,blank=True,verbose_name='读者管理')
+    bookset = models.IntegerField(default=1,blank=True,verbose_name='图书管理')
+    borrowback = models.IntegerField(default=1,blank=True,verbose_name='借还管理')
+    sysquery = models.IntegerField(default=1,blank=True,verbose_name='系统查询')
     class Meta:
         db_table = 't_purview'
 
