@@ -9,6 +9,7 @@
     <title>图书管理系统</title>
     <link rel="stylesheet" href="{% static '' %}pintuer.css">
     <link rel="stylesheet" href="{% static '' %}admin.css">
+    <link rel="stylesheet" href="{% static '' %}iconfont.css">
 </head>
 <body>
 <div class="bg" style="background:url({% static '' %}bg.jpg);"></div>
@@ -27,23 +28,25 @@
                     <div class="form-group">
                         <div class="field field-icon-right">
                             <input type="text" class="input input-big" id="username" name="name" placeholder="管理员登录账号" data-validate="required:请填写账号" />
-                            <span class="icon icon-user margin-small"></span>
+                            <span class="icon margin-small"><i class="iconfont">&#xe6a7;</i></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group check">
                         <div class="field field-icon-right">
-                            <input type="password" class="input input-big" name="password" placeholder="管理员登录密码" data-validate="required:请填写密码" />
-                            <span class="icon icon-key margin-small"></span>
+                            <input type="password" class="input input-big" id="password" name="password" placeholder="管理员登录密码" data-validate="required:请填写密码" />
+                            <span class="icon margin-small"><i class="iconfont">&#xe6b9;</i></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="field">
-                            <input type="text" class="input input-big" name="code" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
-                            <img src="{% static '' %}passcode.jpg" alt="" width="100" height="32" class="passcode" style="height:43px;cursor:pointer;" onclick="this.src=this.src+'?'">
+                            <input type="text" class="input verify input-big" style="position: relative" name="code" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
+                            <div class="canBox">
+                                <canvas width="100" id="myCan" height="32" class="passcode" ></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div style="padding-top:30px;"><input type="submit" class="button button-block bg-main text-big input-big login" value="登录"></div>
+                <div style="padding-top:30px;"><input type="submit" class="button button-block bg-main text-big input-big login" id="login" value="登录"></div>
                 <div style="padding-top:10px;"><input type="button" class="button button-block bg-main text-big input-big btn" value="注册"></div>
             </div>
             </form>          
@@ -53,14 +56,42 @@
 <script src="{% static '' %}jquery-1.12.3.min.js"></script>
 <script src="{% static '' %}pintuer.js"></script>
 <script>
-    {#$('.login').click(function () {#}
-    {#    var username = document.getElementById("username").value;#}
-    {#    console.log(username);#}
-    {#    window.alert(username);#}
-    {#    $('.userform').action = "/home/"+username;#}
-
+    //随机函数算法
+    function createVerify(){
+        function createNum(max,min) {
+            var v_num = Math.floor(Math.random()*(max-min)+min);
+            return v_num;
+        }
+        var str='qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+        var verify = str[createNum(62,0)]+str[createNum(62,0)]+str[createNum(62,0)]+str[createNum(62,0)];
+        return verify;
+    }
+    function drawVerify(){
+        var myCan = document. querySelector('#myCan');
+        var cnt = myCan.getContext('2d');
+        cnt.clearRect(0,0,myCan.width,myCan.height);
+        cnt.font='24px 微软雅黑';
+        cnt.fillStyle='red';
+        var res=createVerify();
+        cnt.fillText(res,20,myCan.height/2+5,myCan.width-10);
+        return res;
+    }
+    $('.canBox').click(function () {
+        drawVerify();
+    });
+    var right_value = drawVerify();
+    //判断验证码函数
+    $('#login').click(function () {
+        var judgeValue = $('.verify').val();
+        var reg = new RegExp(right_value,'gi');
+        if(!reg.test(judgeValue)||$('#username').val().trim().length==0||$('#password').val().trim().length==0){
+            alert('信息不完整或输入有误');
+            return false
+        }else{
+            return true
+        }
+    });
     $('.btn').click(function () {
-
         location.href='/register/';
     });
 </script>

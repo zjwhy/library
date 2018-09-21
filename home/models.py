@@ -123,11 +123,11 @@ class Parameter(models.Model):
 class Purview(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     manager = models.ForeignKey(Manager,models.CASCADE)#管理员权限
-    sysset = models.IntegerField(default=0,blank=True,verbose_name='系统设置')
-    readerset = models.IntegerField(default=0,blank=True,verbose_name='读者管理')
-    bookset = models.IntegerField(default=0,blank=True,verbose_name='图书管理')
-    borrowback = models.IntegerField(default=0,blank=True,verbose_name='借还管理')
-    sysquery = models.IntegerField(default=0,blank=True,verbose_name='系统查询')
+    sysset = models.IntegerField(default=1,blank=True,verbose_name='系统设置')
+    readerset = models.IntegerField(default=1,blank=True,verbose_name='读者管理')
+    bookset = models.IntegerField(default=1,blank=True,verbose_name='图书管理')
+    borrowback = models.IntegerField(default=1,blank=True,verbose_name='借还管理')
+    sysquery = models.IntegerField(default=1,blank=True,verbose_name='系统查询')
     class Meta:
         db_table = 't_purview'
 
